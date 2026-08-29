@@ -21,6 +21,7 @@ type groupItem struct {
 	name     string
 	ids      []string
 	expanded bool
+	focused  bool
 }
 
 func (i groupItem) Title() string {
@@ -30,7 +31,12 @@ func (i groupItem) Title() string {
 	}
 	return fmt.Sprintf("%s %s (%d)", marker, i.name, len(i.ids))
 }
-func (i groupItem) Description() string { return "space expands or collapses this group" }
+func (i groupItem) Description() string {
+	if i.focused {
+		return "space expands or collapses this group"
+	}
+	return ""
+}
 func (i groupItem) FilterValue() string { return i.name }
 
 type grouping uint8
@@ -77,6 +83,7 @@ type selectionModel struct {
 	selected   map[string]bool
 	grouping   grouping
 	expanded   map[string]bool
+	focused    string
 	cancelled  bool
 }
 
@@ -141,11 +148,20 @@ func (m selectionModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 		case "g":
 			m.grouping = (m.grouping + 1) % 4
 			m.expanded = make(map[string]bool)
+			m.focused = ""
 			return m, m.list.SetItems(m.items())
 		}
 	}
 	var cmd tea.Cmd
 	m.list, cmd = m.list.Update(msg)
+	if current, ok := m.list.SelectedItem().(groupItem); ok {
+		m.focused = current.name
+	} else {
+		m.focused = ""
+	}
+	if m.grouping != groupNone {
+		cmd = tea.Sequence(cmd, m.list.SetItems(m.items()))
+	}
 	return m, cmd
 }
 
@@ -190,7 +206,7 @@ func (m selectionModel) items() []list.Item {
 			ids[i] = candidate.ID
 		}
 		expanded := m.expanded[name]
-		items = append(items, groupItem{name: name, ids: ids, expanded: expanded})
+		items = append(items, groupItem{name: name, ids: ids, expanded: expanded, focused: name == m.focused})
 		if expanded {
 			items = append(items, m.candidateItems(group)...)
 		}
