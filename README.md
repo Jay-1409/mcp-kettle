@@ -41,7 +41,7 @@ go run ./cmd/mcp-kettel \
   --output ./generated-mcp
 ```
 
-The checklist starts with every route selected. Use `space` to toggle, `a` to select all, `n` to clear all, `/` to filter, `enter` to generate, or `esc` to cancel.
+The checklist starts with every route selected. Use `g` to cycle grouping by source file, HTTP method, or route prefix. Groups start collapsed; highlight a group and press `space` to expand or collapse it. Once expanded, use `space` on a route to toggle one, `a` to select all, `n` to clear all, `/` to filter, `enter` to generate, or `esc` to cancel.
 
 Run the generated server beside the running FastAPI application:
 

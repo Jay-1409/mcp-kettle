@@ -5,7 +5,7 @@ MCP Kettel follows a short pipeline:
 1. `cmd/mcp-kettel` validates the input and output paths.
 2. `internal/scan` finds Python source files.
 3. `internal/scan/fastapi` parses supported decorators and produces normalized candidates.
-4. `internal/tui` lets the user filter and select candidates.
+4. `internal/tui` lets the user filter, group, and select candidates.
 5. `internal/generate` writes a Go MCP server for the selected candidates.
 
 The scanner uses Tree-sitter and never imports or executes the host project. The generated server exposes one MCP tool per selected route and forwards requests to `MCP_API_BASE_URL` over HTTP.
@@ -13,3 +13,5 @@ The scanner uses Tree-sitter and never imports or executes the host project. The
 The current scanner skips Pydantic request bodies, dependency injection, computed routes, decorator aliases, and unsupported parameter types. The output directory must not already exist.
 
 The current workflow is synchronous and single-process. No background workers or shared service state are required. There are no architecture diagrams because the pipeline is linear and is fully described above.
+
+The TUI can group routes by source file, HTTP method, or first route segment. Groups start collapsed and expand with `space`; expanded route rows retain the normal individual selection behavior.
