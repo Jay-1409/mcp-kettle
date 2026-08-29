@@ -1,30 +1,70 @@
 # MCP Kettel
 
-MCP Kettel scans a local FastAPI project without importing or executing it, lets you choose endpoints in an interactive terminal list, and generates a Go MCP server that proxies the selected HTTP APIs.
+> *Turn the useful routes in a local FastAPI project into an MCP server.*
 
-## Run
+[![License: not specified](https://img.shields.io/badge/license-not%20specified-lightgrey.svg)](./LICENSE)
+[![Version: 0.1.0](https://img.shields.io/badge/version-0.1.0-blue.svg)](./go.mod)
+[![Language: Go](https://img.shields.io/badge/language-Go-00ADD8.svg)](https://go.dev/)
+
+## What's in it for you
+
+- Find FastAPI routes without running or importing the source project.
+- Review discovered routes before exposing anything.
+- Search, select, or clear routes from an interactive terminal checklist.
+- Generate a standalone Go MCP server with only the routes you chose.
+- Keep credentials out of generated source.
+
+## Features
+
+- Static FastAPI route discovery.
+- Support for `GET`, `POST`, `PUT`, `PATCH`, `DELETE`, `OPTIONS`, and `HEAD`.
+- Primitive path and query parameters: `str`, `int`, `float`, and `bool`.
+- Deterministic MCP server generation.
+- Optional upstream `Authorization` header forwarding.
+- Safe cancellation and refusal to overwrite an existing output directory.
+
+## Quick Start
+
+Install Go 1.24 or newer, then run:
 
 ```sh
-go run ./cmd/mcp-kettel --input /path/to/fastapi-project --output ./generated-mcp
+go run ./cmd/mcp-kettel \
+  --input /path/to/fastapi-project \
+  --output ./generated-mcp
 ```
 
-In the selector:
+Try the included example:
 
-- `space` toggles an endpoint;
-- `a` selects all and `n` selects none;
-- `/` filters the list;
-- `enter` generates the server;
-- `esc` cancels without writing files.
+```sh
+go run ./cmd/mcp-kettel \
+  --input ./example/sample-project \
+  --output ./generated-mcp
+```
 
-Run the generated server:
+The checklist starts with every route selected. Use `space` to toggle, `a` to select all, `n` to clear all, `/` to filter, `enter` to generate, or `esc` to cancel.
+
+Run the generated server beside the running FastAPI application:
 
 ```sh
 cd generated-mcp
 MCP_API_BASE_URL=http://127.0.0.1:8000 go run .
 ```
 
-Set `MCP_API_AUTHORIZATION` to a complete Authorization header value when the upstream API requires one.
+For an authenticated API, set the complete header value:
 
-## Current slice
+```sh
+MCP_API_AUTHORIZATION="Bearer $TOKEN" \
+MCP_API_BASE_URL=http://127.0.0.1:8000 \
+go run .
+```
 
-The scanner supports literal `@app.get(...)`, `@router.post(...)`, and other standard FastAPI method decorators with primitive `str`, `int`, `float`, and `bool` path/query parameters. Pydantic request bodies, dependency injection, computed routes, and decorator aliases are deliberately skipped until they can be represented safely.
+If `--output` is omitted, Kettel writes to `<input>/mcp-server`.
+
+## Documentation
+
+- [Architecture and data flow](./docs/architecture.md)
+- [Contributing](./docs/contributing.md)
+
+## License
+
+Unlicensed (no terms declared). See [LICENSE](./LICENSE).
