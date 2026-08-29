@@ -94,6 +94,8 @@ func Select(candidates []model.Candidate) ([]model.Candidate, bool, error) {
 	}
 	m := selectionModel{candidates: candidates, selected: selected, expanded: make(map[string]bool)}
 	delegate := list.NewDefaultDelegate()
+	delegate.Styles.NormalTitle = delegate.Styles.NormalTitle.UnsetForeground()
+	delegate.Styles.SelectedTitle = delegate.Styles.SelectedTitle.UnsetForeground()
 	delegate.Styles.FilterMatch = lipgloss.NewStyle().
 		Bold(true).
 		Foreground(lipgloss.Color("#FFD75F")).
