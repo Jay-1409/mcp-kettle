@@ -25,3 +25,11 @@ func TestGroupedItemsToggleByRoutePrefix(t *testing.T) {
 		t.Fatalf("expanded grouped items = %d, want 4", got)
 	}
 }
+
+func TestFilterValueMatchesVisibleItemLayout(t *testing.T) {
+	candidate := model.Candidate{Method: "GET", Route: "/health", SourceFile: "app.py", SourceLine: 6}
+	i := item{candidate: candidate}
+	if got, want := i.FilterValue(), "○  GET    /health                      app.py:6"; got != want {
+		t.Fatalf("filter value = %q, want %q", got, want)
+	}
+}

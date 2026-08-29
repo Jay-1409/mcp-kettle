@@ -74,7 +74,7 @@ func (i item) Description() string {
 }
 
 func (i item) FilterValue() string {
-	return strings.Join([]string{i.candidate.ToolName, i.candidate.Method, i.candidate.Route, i.candidate.SourceFile}, " ")
+	return fmt.Sprintf("○  %s", i.candidate.Label())
 }
 
 type selectionModel struct {
