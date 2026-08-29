@@ -93,7 +93,12 @@ func Select(candidates []model.Candidate) ([]model.Candidate, bool, error) {
 		selected[candidate.ID] = true
 	}
 	m := selectionModel{candidates: candidates, selected: selected, expanded: make(map[string]bool)}
-	m.list = list.New(m.items(), list.NewDefaultDelegate(), 100, 24)
+	delegate := list.NewDefaultDelegate()
+	delegate.Styles.FilterMatch = lipgloss.NewStyle().
+		Underline(true).
+		UnderlineColor(lipgloss.Color("#F793FF")).
+		Background(lipgloss.NoColor{})
+	m.list = list.New(m.items(), delegate, 100, 24)
 	m.list.Title = "MCP Kettel · choose API tools"
 	m.list.AdditionalFullHelpKeys = nil
 
