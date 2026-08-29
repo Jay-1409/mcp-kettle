@@ -152,11 +152,18 @@ func (m selectionModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 func (m selectionModel) View() tea.View {
 	count := m.selectedCount()
 	footer := lipgloss.NewStyle().Foreground(lipgloss.Color("241")).Render(
-		fmt.Sprintf("  %d/%d selected · g group: %s · space toggle/expand · a all · n none · / filter · enter generate · esc cancel", count, len(m.candidates), m.grouping),
+		fmt.Sprintf("  %d/%d selected · g group: %s · %s · a all · n none · / filter · enter generate · esc cancel", count, len(m.candidates), m.grouping, m.spaceHint()),
 	)
 	view := tea.NewView(m.list.View() + "\n" + footer)
 	view.AltScreen = true
 	return view
+}
+
+func (m selectionModel) spaceHint() string {
+	if _, ok := m.list.SelectedItem().(groupItem); ok {
+		return "space expand/collapse"
+	}
+	return "space toggle"
 }
 
 func (m selectionModel) items() []list.Item {
