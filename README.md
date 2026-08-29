@@ -6,6 +6,8 @@
 [![Version: 0.1.0](https://img.shields.io/badge/version-0.1.0-blue.svg)](./go.mod)
 [![Language: Go](https://img.shields.io/badge/language-Go-00ADD8.svg)](https://go.dev/)
 
+![MCP Kettel interactive route selection](./docs/images/kettel-demo.gif)
+
 ## What's in it for you
 
 - Find FastAPI routes without running or importing the source project.
@@ -42,6 +44,10 @@ go run ./cmd/mcp-kettel \
 ```
 
 The checklist starts with every route selected. Use `g` to cycle grouping by source file, HTTP method, or route prefix. Groups start collapsed; highlight a group and press `space` to expand or collapse it. Once expanded, use `space` on a route to toggle one, `a` to select all, `n` to clear all, `/` to filter, `enter` to generate, or `esc` to cancel.
+
+| Group large route sets | Filter matching APIs |
+| --- | --- |
+| ![Routes grouped by source file](./docs/images/kettel-grouping.png) | ![Routes filtered by the word users](./docs/images/kettel-filter.png) |
 
 Run the generated server beside the running FastAPI application:
 
