@@ -5,7 +5,7 @@ MCP Kettel scans a local FastAPI project without importing or executing it, lets
 ## Run
 
 ```sh
-go run ./cmd/mcp-kettel --output ./generated-mcp /path/to/fastapi-project
+go run ./cmd/mcp-kettel --input /path/to/fastapi-project --output ./generated-mcp
 ```
 
 In the selector:

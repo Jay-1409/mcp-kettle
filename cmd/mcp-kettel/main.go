@@ -21,14 +21,15 @@ func main() {
 
 func run(args []string) error {
 	flags := flag.NewFlagSet("mcp-kettel", flag.ContinueOnError)
+	input := flags.String("input", "", "FastAPI project directory to scan")
 	output := flags.String("output", "", "generated MCP server directory (default: <host>/mcp-server)")
 	if err := flags.Parse(args); err != nil {
 		return err
 	}
-	if flags.NArg() != 1 {
-		return fmt.Errorf("usage: mcp-kettel [--output DIR] HOST_DIRECTORY")
+	if *input == "" || flags.NArg() != 0 {
+		return fmt.Errorf("usage: mcp-kettel --input DIR [--output DIR]")
 	}
-	host, err := filepath.Abs(flags.Arg(0))
+	host, err := filepath.Abs(*input)
 	if err != nil {
 		return err
 	}
