@@ -8,6 +8,7 @@ import (
 
 	"mcp-kettel/internal/generate"
 	"mcp-kettel/internal/scan"
+	"mcp-kettel/internal/scan/express"
 	"mcp-kettel/internal/scan/fastapi"
 	"mcp-kettel/internal/tui"
 )
@@ -21,7 +22,7 @@ func main() {
 
 func run(args []string) error {
 	flags := flag.NewFlagSet("mcp-kettel", flag.ContinueOnError)
-	input := flags.String("input", "", "FastAPI project directory to scan")
+	input := flags.String("input", "", "project directory to scan for FastAPI or Express routes")
 	output := flags.String("output", "", "generated MCP server directory (default: <host>/mcp-server)")
 	if err := flags.Parse(args); err != nil {
 		return err
@@ -41,12 +42,12 @@ func run(args []string) error {
 		return fmt.Errorf("host path is not a directory: %s", host)
 	}
 
-	candidates, err := scan.Directory(host, fastapi.ScanFile)
+	candidates, err := scan.Directory(host, fastapi.ScanFile, express.ScanFile)
 	if err != nil {
 		return err
 	}
 	if len(candidates) == 0 {
-		return fmt.Errorf("no supported FastAPI routes found")
+		return fmt.Errorf("no supported FastAPI or Express routes found")
 	}
 	selected, cancelled, err := tui.Select(candidates)
 	if err != nil {

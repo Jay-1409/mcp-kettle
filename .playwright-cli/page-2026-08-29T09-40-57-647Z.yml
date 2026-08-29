@@ -1,0 +1,468 @@
+- generic [active] [ref=e1]:
+  - generic [ref=e2]:
+    - generic [ref=e3]:
+      - generic [ref=e4]: Lavish
+      - generic [ref=e5]: Editor
+    - button "Annotate" [pressed] [ref=e6] [cursor=pointer]
+    - button "More" [ref=e11] [cursor=pointer]
+  - generic [ref=e16]:
+    - iframe [ref=e18]:
+      - generic [ref=f3e1]:
+        - banner [ref=f3e2]:
+          - generic [ref=f3e3]:
+            - generic [ref=f3e4]:
+              - generic [ref=f3e5]: MCP Kettel
+              - generic [ref=f3e6]: Project plan
+            - navigation "Plan sections" [ref=f3e7]:
+              - link "Architecture" [ref=f3e8]:
+                - /url: "#architecture"
+              - link "Roadmap" [ref=f3e9]:
+                - /url: "#roadmap"
+              - link "Decisions" [ref=f3e10]:
+                - /url: "#decisions"
+        - main [ref=f3e11]:
+          - generic [ref=f3e13]:
+            - generic [ref=f3e14]:
+              - paragraph [ref=f3e15]: From codebase to useful tools
+              - heading "Build the shortest trustworthy path to an MCP server." [level=1] [ref=f3e16]
+              - paragraph [ref=f3e17]: Scan a local project without executing it, let the developer choose what becomes a tool, then generate a runnable MCP server. Start with FastAPI HTTP routes; earn every expansion after that.
+              - generic [ref=f3e18]:
+                - generic [ref=f3e19]: Local-first
+                - generic [ref=f3e20]: Static analysis
+                - generic [ref=f3e21]: Human selection
+                - generic [ref=f3e22]: AI optional
+            - generic [ref=f3e23]:
+              - generic [ref=f3e24]:
+                - generic [ref=f3e25]: First release
+                - generic [ref=f3e26]: 1 path
+                - generic [ref=f3e27]: FastAPI → HTTP proxy → Python MCP
+              - generic [ref=f3e28]:
+                - generic [ref=f3e29]: Core stages
+                - generic [ref=f3e30]: "6"
+                - generic [ref=f3e31]: scan, detect, normalize, select, generate, verify
+              - generic [ref=f3e32]:
+                - generic [ref=f3e33]: AI dependency
+                - generic [ref=f3e34]: None
+                - generic [ref=f3e35]: Deferred until deterministic generation works
+          - generic [ref=f3e36]:
+            - article [ref=f3e37]:
+              - generic [ref=f3e38]:
+                - paragraph [ref=f3e39]: Verified current state
+                - heading "Requirements exist; implementation does not." [level=2] [ref=f3e40]
+                - paragraph [ref=f3e41]: "The workspace currently contains only REQUIREMENTS.md. That is useful: there is no compatibility burden, but every technical choice must be justified by the first working slice."
+            - article [ref=f3e42]:
+              - generic [ref=f3e43]:
+                - paragraph [ref=f3e44]: North-star result
+                - paragraph [ref=f3e45]: A developer reaches a working, inspectable MCP server in one guided command.
+          - generic [ref=f3e46]:
+            - generic [ref=f3e47]:
+              - paragraph [ref=f3e48]: User experience
+              - heading "One command, one decision screen, one generated server." [level=2] [ref=f3e49]
+            - generic [ref=f3e50]:
+              - generic [ref=f3e51]:
+                - generic [ref=f3e52]:
+                  - text: $
+                  - code [ref=f3e53]: mcp-kettel ./billing-api
+                - generic [ref=f3e54]:
+                  - text: ✓
+                  - code [ref=f3e55]: Found 12 FastAPI routes
+                - code [ref=f3e57]: "Search: invoice"
+                - generic [ref=f3e58]:
+                  - text: ●
+                  - code [ref=f3e59]: "[x] GET /invoices/{id}"
+                - generic [ref=f3e60]:
+                  - text: ●
+                  - code [ref=f3e61]: "[x] POST /invoices"
+                - generic [ref=f3e62]:
+                  - text: ○
+                  - code [ref=f3e63]: "[ ] DELETE /invoices/{id}"
+                - generic [ref=f3e64]:
+                  - text: ✓
+                  - code [ref=f3e65]: Generated 2 MCP tools
+              - list [ref=f3e68]:
+                - listitem [ref=f3e69]:
+                  - strong [ref=f3e70]: Discover safely.
+                  - text: Walk supported files, honor ignore rules, parse source without importing it.
+                - listitem [ref=f3e71]:
+                  - strong [ref=f3e72]: Explain candidates.
+                  - text: Show method, route, tool name, source location, inputs, and a risk hint.
+                - listitem [ref=f3e73]:
+                  - strong [ref=f3e74]: Let the human curate.
+                  - text: All selected initially; search, toggle, select all, clear all, cancel, or confirm.
+                - listitem [ref=f3e75]:
+                  - strong [ref=f3e76]: Generate only the selection.
+                  - text: Produce a small MCP server that calls the existing HTTP API.
+                - listitem [ref=f3e77]:
+                  - strong [ref=f3e78]: Prove it works.
+                  - text: Validate generated syntax, list MCP tools, and print the exact run/config commands.
+          - generic [ref=f3e79]:
+            - generic [ref=f3e80]:
+              - paragraph [ref=f3e81]: Technical architecture
+              - heading "A narrow pipeline with replaceable scanners." [level=2] [ref=f3e82]
+              - paragraph [ref=f3e83]: One normalized candidate shape separates source discovery from terminal selection and code generation. Framework-specific logic stops at the scanner boundary.
+            - figure "Generation-time topology. The host project is parsed, never executed." [ref=f3e84]:
+              - generic [ref=f3e85]:
+                - img "MCP Kettel generation pipeline A local directory is scanned, candidates are normalized and selected, then an MCP project is generated and verified." [ref=f3e86]:
+                  - generic "Validated local host directory" [ref=f3e87]:
+                    - generic [ref=f3e89]: Host directory
+                    - generic [ref=f3e90]: read-only scan
+                  - generic "Walk supported source files"
+                  - generic "OpenAPI and framework-specific static scanners" [ref=f3e91]:
+                    - generic [ref=f3e93]: Scanners
+                    - generic [ref=f3e94]: OpenAPI first
+                    - generic [ref=f3e95]: FastAPI AST
+                    - generic [ref=f3e96]: future adapters
+                  - generic "Emit discovered candidates"
+                  - generic "Normalized candidate metadata shared by every downstream stage" [ref=f3e97]:
+                    - generic [ref=f3e99]: Candidate model
+                    - generic [ref=f3e100]: route · schema · source
+                  - generic "Present normalized candidates"
+                  - generic "Interactive terminal checklist" [ref=f3e101]:
+                    - generic [ref=f3e103]: Selector
+                    - generic [ref=f3e104]: all checked · filter
+                  - generic "Pass only selected candidates"
+                  - generic "Template-based MCP server generator and verification" [ref=f3e105]:
+                    - generic [ref=f3e107]: Generate + verify
+                    - generic [ref=f3e108]: server templates
+                    - generic [ref=f3e109]: syntax check
+                    - generic [ref=f3e110]: tool-list smoke test
+                - generic [ref=f3e111]: Generation-time topology. The host project is parsed, never executed.
+            - generic [ref=f3e112]:
+              - article [ref=f3e113]:
+                - generic [ref=f3e114]:
+                  - generic [ref=f3e115]: Module 1
+                  - heading "Discovery" [level=3] [ref=f3e116]
+                  - paragraph [ref=f3e117]: File walking, ignore rules, OpenAPI lookup, FastAPI AST extraction, deterministic ordering.
+              - article [ref=f3e118]:
+                - generic [ref=f3e119]:
+                  - generic [ref=f3e120]: Module 2
+                  - heading "Candidate model" [level=3] [ref=f3e121]
+                  - paragraph [ref=f3e122]: Stable ID, kind, method, route, name, description, parameters, source span, confidence, risk hints.
+              - article [ref=f3e123]:
+                - generic [ref=f3e124]:
+                  - generic [ref=f3e125]: Module 3
+                  - heading "Terminal selector" [level=3] [ref=f3e126]
+                  - paragraph [ref=f3e127]: Search without losing hidden selection state; keyboard navigation; explicit cancel and confirm.
+              - article [ref=f3e128]:
+                - generic [ref=f3e129]:
+                  - generic [ref=f3e130]: Module 4
+                  - heading "Generator" [level=3] [ref=f3e131]
+                  - paragraph [ref=f3e132]: Render selected tools, configuration, README, and one smoke check into a new output directory.
+          - generic [ref=f3e133]:
+            - generic [ref=f3e134]:
+              - paragraph [ref=f3e135]: Generated runtime
+              - heading "Keep application logic where it already lives." [level=2] [ref=f3e136]
+            - 'figure "Recommended v1 execution model: HTTP proxy. Direct imports come later and only for explicitly opted-in functions." [ref=f3e137]':
+              - generic [ref=f3e138]:
+                - img "Generated MCP server runtime An MCP client calls generated tools, which proxy requests to the existing API while secrets remain in environment variables." [ref=f3e139]:
+                  - generic "Any MCP-compatible client" [ref=f3e140]:
+                    - generic [ref=f3e142]: MCP client
+                    - generic [ref=f3e143]: stdio / Streamable HTTP
+                  - generic "MCP tool call"
+                  - generic [ref=f3e144]: tool call
+                  - generic "Generated MCP server contains only selected tools" [ref=f3e145]:
+                    - generic [ref=f3e147]: Generated server
+                    - generic [ref=f3e148]: selected tools only
+                    - generic [ref=f3e149]: input validation
+                    - generic [ref=f3e150]: HTTP client + errors
+                  - generic "Authenticated HTTP request"
+                  - generic [ref=f3e151]: HTTP request
+                  - generic "Existing application API remains the source of business behavior" [ref=f3e152]:
+                    - generic [ref=f3e154]: Existing API
+                    - generic [ref=f3e155]: auth · data · business logic
+                - generic [ref=f3e156]: "Recommended v1 execution model: HTTP proxy. Direct imports come later and only for explicitly opted-in functions."
+          - generic [ref=f3e157]:
+            - generic [ref=f3e158]:
+              - paragraph [ref=f3e159]: Delivery roadmap
+              - heading "Seven gates, each ending in something runnable." [level=2] [ref=f3e160]
+              - paragraph [ref=f3e161]: Relative effort assumes one developer. Time estimates deliberately wait until the implementation language and TUI library are chosen.
+            - table [ref=f3e163]:
+              - rowgroup [ref=f3e164]:
+                - row [ref=f3e165]:
+                  - columnheader "Gate" [ref=f3e166]
+                  - columnheader "Build" [ref=f3e167]
+                  - columnheader "Exit criterion" [ref=f3e168]
+                  - columnheader "Effort" [ref=f3e169]
+                  - columnheader "Depends on" [ref=f3e170]
+              - rowgroup [ref=f3e171]:
+                - row [ref=f3e172]:
+                  - cell "0 Decisions" [ref=f3e173]:
+                    - generic [ref=f3e174]: "0"
+                    - text: Decisions
+                  - cell "Choose implementation stack, v1 source framework, proxy model, CLI name." [ref=f3e175]
+                  - cell "Four decisions recorded; one example host app selected." [ref=f3e176]
+                  - cell "S" [ref=f3e177]
+                  - cell "—" [ref=f3e179]
+                - row [ref=f3e180]:
+                  - cell "1 Skeleton" [ref=f3e181]:
+                    - generic [ref=f3e182]: "1"
+                    - text: Skeleton
+                  - cell "CLI path validation, help/version, ignore-aware file walk, structured diagnostics." [ref=f3e183]
+                  - cell "Invalid paths fail cleanly; scan never enters ignored dependency/build folders." [ref=f3e184]
+                  - cell "M" [ref=f3e185]
+                  - cell "0" [ref=f3e187]
+                - row [ref=f3e188]:
+                  - cell "2 Discovery" [ref=f3e189]:
+                    - generic [ref=f3e190]: "2"
+                    - text: Discovery
+                  - cell "OpenAPI detection plus FastAPI decorator parsing into the candidate model." [ref=f3e191]
+                  - cell "Fixture project yields stable candidates with route, schema, and source location—without imports." [ref=f3e192]
+                  - cell "M" [ref=f3e193]
+                  - cell "1" [ref=f3e195]
+                - row [ref=f3e196]:
+                  - cell "3 Selection" [ref=f3e197]:
+                    - generic [ref=f3e198]: "3"
+                    - text: Selection
+                  - cell "Beautiful terminal list; all checked; filter, toggle, select all, clear all, cancel, confirm." [ref=f3e199]
+                  - cell "Filtering preserves hidden selections; cancel writes nothing." [ref=f3e200]
+                  - cell "M" [ref=f3e201]
+                  - cell "2" [ref=f3e203]
+                - row [ref=f3e204]:
+                  - cell "4 Generation" [ref=f3e205]:
+                    - generic [ref=f3e206]: "4"
+                    - text: Generation
+                  - cell "Python MCP proxy templates, base URL/env config, inputs, HTTP errors, selected tools only." [ref=f3e207]
+                  - cell "Generated server starts and lists exactly the chosen tool names." [ref=f3e208]
+                  - cell "L" [ref=f3e209]
+                  - cell "2, 3" [ref=f3e211]
+                - row [ref=f3e212]:
+                  - cell "5 Verification" [ref=f3e213]:
+                    - generic [ref=f3e214]: "5"
+                    - text: Verification
+                  - cell "Syntax check, MCP smoke test, fixture API call, overwrite protection, actionable summary." [ref=f3e215]
+                  - cell "One command proves scan → select → generate → invoke end to end." [ref=f3e216]
+                  - cell "M" [ref=f3e217]
+                  - cell "4" [ref=f3e219]
+                - row [ref=f3e220]:
+                  - cell "6 Productize" [ref=f3e221]:
+                    - generic [ref=f3e222]: "6"
+                    - text: Productize
+                  - cell "Package/install flow, README, troubleshooting, CI on supported OSes, versioned output." [ref=f3e223]
+                  - cell "A fresh machine can install and generate the example server from documented steps." [ref=f3e224]
+                  - cell "M" [ref=f3e225]
+                  - cell "5" [ref=f3e227]
+                - row [ref=f3e228]:
+                  - cell "7 Expand" [ref=f3e229]:
+                    - generic [ref=f3e230]: "7"
+                    - text: Expand
+                  - cell "Add adapters one at a time; explicit functions; optional AI enrichment last." [ref=f3e231]
+                  - cell "Each adapter passes the same candidate and generation contract tests." [ref=f3e232]
+                  - cell "Ongoing" [ref=f3e233]
+                  - cell "6 + demand" [ref=f3e235]
+          - generic [ref=f3e236]:
+            - generic [ref=f3e237]:
+              - paragraph [ref=f3e238]: Scope ladder
+              - heading "Ship capability in rings, not all at once." [level=2] [ref=f3e239]
+            - generic [ref=f3e240]:
+              - article [ref=f3e241]:
+                - generic [ref=f3e242]:
+                  - generic [ref=f3e243]: MVP
+                  - heading "Prove the loop" [level=3] [ref=f3e244]
+                  - list [ref=f3e245]:
+                    - listitem [ref=f3e246]: Local FastAPI projects
+                    - listitem [ref=f3e247]: OpenAPI + static decorators
+                    - listitem [ref=f3e248]: Interactive selection
+                    - listitem [ref=f3e249]: Python HTTP-proxy MCP
+                    - listitem [ref=f3e250]: One end-to-end fixture
+              - article [ref=f3e251]:
+                - generic [ref=f3e252]:
+                  - generic [ref=f3e253]: v1
+                  - heading "Make it dependable" [level=3] [ref=f3e254]
+                  - list [ref=f3e255]:
+                    - listitem [ref=f3e256]: Auth environment mapping
+                    - listitem [ref=f3e257]: Regeneration/overwrite safety
+                    - listitem [ref=f3e258]: Better schema extraction
+                    - listitem [ref=f3e259]: Installable release
+                    - listitem [ref=f3e260]: macOS, Linux, Windows CI
+              - article [ref=f3e261]:
+                - generic [ref=f3e262]:
+                  - generic [ref=f3e263]: vNext
+                  - heading "Follow real demand" [level=3] [ref=f3e264]
+                  - list [ref=f3e265]:
+                    - listitem [ref=f3e266]: Express or another top framework
+                    - listitem [ref=f3e267]: GraphQL/OpenAPI refinement
+                    - listitem [ref=f3e268]: Explicit function opt-in
+                    - listitem [ref=f3e269]: Additional output runtime
+                    - listitem [ref=f3e270]: Non-interactive CI mode
+              - article [ref=f3e271]:
+                - generic [ref=f3e272]:
+                  - generic [ref=f3e273]: Later
+                  - heading "AI enhancement" [level=3] [ref=f3e274]
+                  - list [ref=f3e275]:
+                    - listitem [ref=f3e276]: Provider-neutral adapter
+                    - listitem [ref=f3e277]: User-owned credentials
+                    - listitem [ref=f3e278]: Description/name suggestions
+                    - listitem [ref=f3e279]: Risk classification suggestions
+                    - listitem [ref=f3e280]: Never required for generation
+            - alert [ref=f3e281]:
+              - generic [ref=f3e282]:
+                - strong [ref=f3e283]: "Explicitly skipped in MVP:"
+                - text: “every function,” every language, direct application imports, a plugin framework, hosted services, Docker templates, telemetry, and AI orchestration. Add only after measured demand.
+          - generic [ref=f3e284]:
+            - generic [ref=f3e285]:
+              - paragraph [ref=f3e286]: Core contracts
+              - heading "The minimum stable data the pipeline needs." [level=2] [ref=f3e287]
+            - generic [ref=f3e288]:
+              - article [ref=f3e289]:
+                - generic [ref=f3e290]:
+                  - heading "Candidate" [level=3] [ref=f3e291]
+                  - generic [ref=f3e292]:
+                    - code [ref=f3e294]: id stable source-derived ID
+                    - code [ref=f3e296]: kind http_route | function
+                    - code [ref=f3e298]: tool_name proposed MCP name
+                    - code [ref=f3e300]: method + route when HTTP-backed
+                    - code [ref=f3e302]: input_schema JSON Schema
+                    - code [ref=f3e304]: source file + line
+                    - code [ref=f3e306]: risk read | write | destructive?
+              - article [ref=f3e307]:
+                - generic [ref=f3e308]:
+                  - heading "Generated project" [level=3] [ref=f3e309]
+                  - generic [ref=f3e310]:
+                    - code [ref=f3e312]: server.py selected MCP tools
+                    - code [ref=f3e314]: pyproject.toml runtime dependencies
+                    - code [ref=f3e316]: .env.example names, never secrets
+                    - code [ref=f3e318]: README.md run + client config
+                    - code [ref=f3e320]: smoke_test.py list/call proof
+          - generic [ref=f3e321]:
+            - generic [ref=f3e322]:
+              - paragraph [ref=f3e323]: Quality gates
+              - heading "Test the seams where generated systems break." [level=2] [ref=f3e324]
+            - generic [ref=f3e325]:
+              - article [ref=f3e326]:
+                - generic [ref=f3e327]:
+                  - generic [ref=f3e328]: Scanner
+                  - heading "Golden fixture" [level=3] [ref=f3e329]
+                  - paragraph [ref=f3e330]: One small FastAPI app covers path/query/body inputs, duplicate names, ignored files, and destructive routes.
+              - article [ref=f3e331]:
+                - generic [ref=f3e332]:
+                  - generic [ref=f3e333]: Selector
+                  - heading "State invariants" [level=3] [ref=f3e334]
+                  - paragraph [ref=f3e335]: Filtering never changes selection; select/clear all have explicit scope; cancel never writes.
+              - article [ref=f3e336]:
+                - generic [ref=f3e337]:
+                  - generic [ref=f3e338]: Generator
+                  - heading "Snapshot + syntax" [level=3] [ref=f3e339]
+                  - paragraph [ref=f3e340]: Generated files are deterministic, parse successfully, and contain only selected candidate IDs.
+              - article [ref=f3e341]:
+                - generic [ref=f3e342]:
+                  - generic [ref=f3e343]: Runtime
+                  - heading "MCP smoke test" [level=3] [ref=f3e344]
+                  - paragraph [ref=f3e345]: Start generated server, list tools, call one read route, and verify mapped API errors.
+              - article [ref=f3e346]:
+                - generic [ref=f3e347]:
+                  - generic [ref=f3e348]: Safety
+                  - heading "No project execution" [level=3] [ref=f3e349]
+                  - paragraph [ref=f3e350]: Scanner tests include a module with a failing import side effect and prove it is never imported.
+              - article [ref=f3e351]:
+                - generic [ref=f3e352]:
+                  - generic [ref=f3e353]: Release
+                  - heading "Fresh install" [level=3] [ref=f3e354]
+                  - paragraph [ref=f3e355]: CI installs the CLI, generates from the fixture, and runs the generated smoke test.
+          - generic [ref=f3e356]:
+            - generic [ref=f3e357]:
+              - paragraph [ref=f3e358]: Risk register
+              - heading "Four risks deserve design attention now." [level=2] [ref=f3e359]
+            - table [ref=f3e361]:
+              - rowgroup [ref=f3e362]:
+                - row [ref=f3e363]:
+                  - columnheader "Risk" [ref=f3e364]
+                  - columnheader "Impact" [ref=f3e365]
+                  - columnheader "Control in the plan" [ref=f3e366]
+                  - columnheader "Residual risk" [ref=f3e367]
+              - rowgroup [ref=f3e368]:
+                - row [ref=f3e369]:
+                  - cell "Dynamic routes evade static analysis" [ref=f3e370]
+                  - cell "Medium" [ref=f3e371]
+                  - cell "Prefer OpenAPI; show confidence/source; document unsupported patterns." [ref=f3e373]
+                  - cell "Some candidates remain undiscovered." [ref=f3e374]
+                - row [ref=f3e375]:
+                  - cell "Unsafe/destructive API becomes a tool" [ref=f3e376]
+                  - cell "High" [ref=f3e377]
+                  - cell "Human selection, method-based risk hints, destructive metadata, all details visible." [ref=f3e379]
+                  - cell "User can still opt in intentionally." [ref=f3e380]
+                - row [ref=f3e381]:
+                  - cell "Source types do not map cleanly to JSON Schema" [ref=f3e382]
+                  - cell "Medium" [ref=f3e383]
+                  - cell "Fail candidate validation visibly; never silently emit a weak schema." [ref=f3e385]
+                  - cell "Manual API cleanup may be required." [ref=f3e386]
+                - row [ref=f3e387]:
+                  - cell "Generated server compiles but cannot call the API" [ref=f3e388]
+                  - cell "High" [ref=f3e389]
+                  - cell "Base URL/auth configuration, runtime smoke test, error-preserving HTTP wrapper." [ref=f3e391]
+                  - cell "Environment-specific network/auth failures." [ref=f3e392]
+          - generic [ref=f3e393]:
+            - generic [ref=f3e394]:
+              - paragraph [ref=f3e395]: Decisions for review
+              - heading "Choose the first slice before implementation." [level=2] [ref=f3e396]
+              - paragraph [ref=f3e397]: Selections stay local until you press “Queue answer,” then appear in Lavish’s feedback queue for you to send.
+            - generic [ref=f3e399]:
+              - heading "1. First source ecosystem" [level=3] [ref=f3e400]
+              - generic [ref=f3e401]:
+                - generic [ref=f3e404]:
+                  - radio "Python + FastAPI Recommended. Python’s AST is in the standard library and route decorators are explicit." [checked] [ref=f3e405] [cursor=pointer]
+                  - generic [ref=f3e406]:
+                    - strong [ref=f3e407]: Python + FastAPI
+                    - paragraph [ref=f3e408]: Recommended. Python’s AST is in the standard library and route decorators are explicit.
+                - generic [ref=f3e411]:
+                  - radio "TypeScript + Express Larger ecosystem, but route composition and typing patterns are more variable." [ref=f3e412] [cursor=pointer]
+                  - generic [ref=f3e413]:
+                    - strong [ref=f3e414]: TypeScript + Express
+                    - paragraph [ref=f3e415]: Larger ecosystem, but route composition and typing patterns are more variable.
+              - button "Queue answer" [ref=f3e417] [cursor=pointer]
+            - generic [ref=f3e419]:
+              - heading "2. Generated tool execution model" [level=3] [ref=f3e420]
+              - generic [ref=f3e421]:
+                - generic [ref=f3e424]:
+                  - radio "HTTP proxy Recommended. Reuses the application’s auth, state, validation, and deployment boundary." [checked] [ref=f3e425] [cursor=pointer]
+                  - generic [ref=f3e426]:
+                    - strong [ref=f3e427]: HTTP proxy
+                    - paragraph [ref=f3e428]: Recommended. Reuses the application’s auth, state, validation, and deployment boundary.
+                - generic [ref=f3e431]:
+                  - radio "Direct imports Lower request overhead, but importing arbitrary applications safely is significantly harder." [ref=f3e432] [cursor=pointer]
+                  - generic [ref=f3e433]:
+                    - strong [ref=f3e434]: Direct imports
+                    - paragraph [ref=f3e435]: Lower request overhead, but importing arbitrary applications safely is significantly harder.
+              - button "Queue answer" [ref=f3e437] [cursor=pointer]
+            - generic [ref=f3e439]:
+              - heading "3. AI scope" [level=3] [ref=f3e440]
+              - generic [ref=f3e441]:
+                - generic [ref=f3e444]:
+                  - radio "Defer until deterministic v1 Recommended. AI later improves descriptions, names, and classification; it does not generate the foundation." [checked] [ref=f3e445] [cursor=pointer]
+                  - generic [ref=f3e446]:
+                    - strong [ref=f3e447]: Defer until deterministic v1
+                    - paragraph [ref=f3e448]: Recommended. AI later improves descriptions, names, and classification; it does not generate the foundation.
+                - generic [ref=f3e451]:
+                  - radio "Include BYO AI in MVP Adds provider configuration, prompt contracts, output validation, retries, and nondeterministic tests." [ref=f3e452] [cursor=pointer]
+                  - generic [ref=f3e453]:
+                    - strong [ref=f3e454]: Include BYO AI in MVP
+                    - paragraph [ref=f3e455]: Adds provider configuration, prompt contracts, output validation, retries, and nondeterministic tests.
+              - button "Queue answer" [ref=f3e457] [cursor=pointer]
+            - generic [ref=f3e459]:
+              - heading "4. Anything to change before implementation?" [level=3] [ref=f3e460]
+              - textbox "Change a phase, add a constraint, reject a recommendation, or name a target framework…" [ref=f3e461]
+              - button "Queue plan feedback" [ref=f3e463] [cursor=pointer]
+          - generic [ref=f3e465]:
+            - generic [ref=f3e466]:
+              - paragraph [ref=f3e467]: MVP definition of done
+              - heading "A fresh FastAPI fixture becomes a callable MCP server without AI or manual code edits." [level=2] [ref=f3e468]
+              - paragraph [ref=f3e469]: The scan executes no host code, the checklist controls the exact tool set, cancellation writes nothing, and the generated smoke test passes.
+            - generic [ref=f3e470]: Ready to build after 3 decisions
+        - contentinfo [ref=f3e471]:
+          - generic [ref=f3e472]:
+            - generic [ref=f3e473]: MCP Kettel project plan · 2026-08-29
+            - generic [ref=f3e474]: Based on the current REQUIREMENTS.md
+    - complementary [ref=e19]:
+      - heading "Conversation" [level=2] [ref=e22]
+      - generic [ref=e23]: Working...
+      - generic [ref=e28]:
+        - textbox "Write a message for the agent..." [ref=e29]
+        - generic [ref=e30]:
+          - button "Attach images" [ref=e31] [cursor=pointer]
+          - status
+        - generic [ref=e32]:
+          - button "Send & End" [ref=e33] [cursor=pointer]
+          - button "Send to Agent" [ref=e38] [cursor=pointer]
+  - generic [ref=e40]:
+    - generic [ref=e41]: Checking layout.One moment.
+    - paragraph [ref=e42]: Lavish is waiting for fonts and final geometry before revealing this artifact.
+    - button "Show anyway" [ref=e43] [cursor=pointer]

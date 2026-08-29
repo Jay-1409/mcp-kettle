@@ -1,0 +1,12 @@
+[      47ms] [VERBOSE] [DOM] Password forms should have (optionally hidden) username fields for accessibility: (More info: https://goo.gl/9p2vKq) %o @ http://127.0.0.1:4387/session/c41068a859c893d7:0
+[  510657ms] [ERROR] Failed to load resource: the server responded with a status of 409 (Conflict) @ http://127.0.0.1:4387/api/c41068a859c893d7/artifact-loads/begin:0
+[ 1016122ms] [ERROR] Failed to load resource: the server responded with a status of 409 (Conflict) @ http://127.0.0.1:4387/api/c41068a859c893d7/artifact-loads/begin:0
+[ 1316662ms] [ERROR] Failed to load resource: the server responded with a status of 409 (Conflict) @ http://127.0.0.1:4387/api/c41068a859c893d7/artifact-loads/begin:0
+[ 1588824ms] [ERROR] Failed to load resource: the server responded with a status of 409 (Conflict) @ http://127.0.0.1:4387/api/c41068a859c893d7/artifact-loads/begin:0
+[ 1602853ms] [ERROR] Failed to load resource: the server responded with a status of 409 (Conflict) @ http://127.0.0.1:4387/api/c41068a859c893d7/artifact-loads/begin:0
+[ 1628750ms] [ERROR] Failed to load resource: the server responded with a status of 409 (Conflict) @ http://127.0.0.1:4387/api/c41068a859c893d7/artifact-loads/begin:0
+[ 1653236ms] [ERROR] Failed to load resource: the server responded with a status of 409 (Conflict) @ http://127.0.0.1:4387/api/c41068a859c893d7/artifact-loads/begin:0
+[ 1672369ms] [ERROR] Failed to load resource: the server responded with a status of 409 (Conflict) @ http://127.0.0.1:4387/api/c41068a859c893d7/artifact-loads/begin:0
+[ 1686455ms] [ERROR] Failed to load resource: the server responded with a status of 409 (Conflict) @ http://127.0.0.1:4387/api/c41068a859c893d7/artifact-loads/begin:0
+[ 1712045ms] [ERROR] Failed to load resource: the server responded with a status of 409 (Conflict) @ http://127.0.0.1:4387/api/c41068a859c893d7/artifact-loads/begin:0
+[ 1725680ms] [ERROR] Failed to load resource: the server responded with a status of 409 (Conflict) @ http://127.0.0.1:4387/api/c41068a859c893d7/artifact-loads/begin:0

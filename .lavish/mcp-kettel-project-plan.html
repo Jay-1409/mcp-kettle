@@ -1,0 +1,509 @@
+<!doctype html>
+<html lang="en" data-theme="luxury">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>MCP Kettel — Project Plan</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/daisyui@5.5.19/daisyui.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/daisyui@5.5.19/themes.css">
+  <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4.2.4/dist/index.global.js"></script>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; }
+    html { scroll-behavior: smooth; background: var(--color-base-300); }
+    body { margin: 0; min-height: 100vh; background: var(--color-base-300); color: var(--color-base-content); }
+    :where(.grid, .flex) > * { min-width: 0; }
+    :where(p, h1, h2, h3, h4, li, td, th, code, .badge) { overflow-wrap: anywhere; }
+    :where(svg) { max-width: 100%; height: auto; }
+    .shell { width: min(1180px, calc(100% - 2rem)); margin-inline: auto; }
+    .eyebrow { letter-spacing: .18em; text-transform: uppercase; font-size: .72rem; font-weight: 800; opacity: .65; }
+    .section-title { font-size: clamp(1.6rem, 3vw, 2.4rem); line-height: 1.08; font-weight: 850; }
+    .muted { opacity: .72; }
+    .mono { font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace; }
+    .surface { background: color-mix(in oklab, var(--color-base-100) 95%, transparent); border: 1px solid color-mix(in oklab, var(--color-base-content) 11%, transparent); }
+    .phase-card { border-left: 4px solid var(--color-primary); }
+    .phase-card[data-later="true"] { border-left-color: var(--color-base-content); }
+    .decision-card:has(input:checked) { outline: 2px solid var(--color-primary); outline-offset: 2px; }
+    .svg-label { font: 700 15px ui-sans-serif, system-ui, sans-serif; fill: currentColor; }
+    .svg-small { font: 500 11px ui-sans-serif, system-ui, sans-serif; fill: currentColor; opacity: .68; }
+    .svg-node { fill: var(--color-base-100); stroke: color-mix(in oklab, var(--color-base-content) 20%, transparent); stroke-width: 1.5; }
+    .svg-node-primary { fill: color-mix(in oklab, var(--color-primary) 18%, var(--color-base-100)); stroke: var(--color-primary); stroke-width: 2; }
+    .svg-subnode { fill: color-mix(in oklab, var(--color-base-100) 72%, transparent); stroke: color-mix(in oklab, var(--color-primary) 60%, transparent); stroke-width: 1; }
+    .svg-edge { stroke: color-mix(in oklab, var(--color-base-content) 40%, transparent); stroke-width: 2; fill: none; }
+    .sticky-nav { backdrop-filter: blur(16px); background: color-mix(in oklab, var(--color-base-300) 83%, transparent); }
+    .scope-line { position: relative; padding-left: 1.15rem; }
+    .scope-line::before { content: ""; position: absolute; left: 0; top: .55rem; width: .48rem; height: .48rem; border-radius: 99px; background: var(--color-primary); }
+    @media (max-width: 640px) {
+      .shell { width: min(100% - 1rem, 1180px); }
+      .hide-mobile { display: none; }
+      .table :where(th, td) { padding: .65rem .55rem; }
+    }
+    @media print {
+      .sticky-nav, .review-controls { display: none !important; }
+      body, html { background: white !important; color: black !important; }
+      .surface { break-inside: avoid; }
+    }
+  </style>
+</head>
+<body>
+  <header class="sticky-nav sticky top-0 z-30 border-b border-base-content/10">
+    <div class="shell navbar px-0 min-h-14">
+      <div class="navbar-start gap-3">
+        <span class="font-black tracking-tight">MCP Kettel</span>
+        <span class="badge badge-primary badge-soft badge-sm">Project plan</span>
+      </div>
+      <nav class="navbar-end hide-mobile gap-1 text-sm" aria-label="Plan sections">
+        <a class="btn btn-ghost btn-sm" href="#architecture">Architecture</a>
+        <a class="btn btn-ghost btn-sm" href="#extensibility">Structure</a>
+        <a class="btn btn-ghost btn-sm" href="#roadmap">Roadmap</a>
+        <a class="btn btn-ghost btn-sm" href="#decisions">Decisions</a>
+      </nav>
+    </div>
+  </header>
+
+  <main class="shell py-8 lg:py-14 space-y-14">
+    <section id="overview" class="hero surface rounded-box overflow-hidden">
+      <div class="hero-content w-full py-12 lg:py-18 px-6 lg:px-12 grid lg:grid-cols-[1.25fr_.75fr] gap-10 items-center">
+        <div>
+          <p class="eyebrow text-primary">From codebase to useful tools</p>
+          <h1 class="mt-3 text-4xl sm:text-5xl lg:text-6xl font-black leading-[.98] tracking-[-.04em]">Build the shortest trustworthy path to an MCP server.</h1>
+          <p class="mt-6 text-lg lg:text-xl leading-relaxed max-w-3xl muted">Scan a local project without executing it, let the developer choose what becomes a tool, then generate a runnable MCP server. Start with FastAPI HTTP routes; earn every expansion after that.</p>
+          <div class="mt-7 flex flex-wrap gap-2">
+            <span class="badge badge-success badge-soft">Local-first</span>
+            <span class="badge badge-info badge-soft">Static analysis</span>
+            <span class="badge badge-primary badge-soft">Human selection</span>
+            <span class="badge badge-warning badge-soft">AI optional</span>
+          </div>
+        </div>
+        <div class="stats stats-vertical surface shadow-sm w-full">
+          <div class="stat">
+            <div class="stat-title">First release</div>
+            <div class="stat-value text-primary">1 path</div>
+            <div class="stat-desc">FastAPI → HTTP proxy → Go MCP</div>
+          </div>
+          <div class="stat">
+            <div class="stat-title">Core stages</div>
+            <div class="stat-value">6</div>
+            <div class="stat-desc">scan, detect, normalize, select, generate, verify</div>
+          </div>
+          <div class="stat">
+            <div class="stat-title">AI dependency</div>
+            <div class="stat-value text-success">None</div>
+            <div class="stat-desc">Deferred until deterministic generation works</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="current-state" class="grid lg:grid-cols-3 gap-4">
+      <article class="card surface lg:col-span-2">
+        <div class="card-body">
+          <p class="eyebrow">Verified current state</p>
+          <h2 class="card-title text-2xl">Requirements exist; implementation does not.</h2>
+          <p class="muted">The workspace currently contains only <span class="mono">REQUIREMENTS.md</span>. That is useful: there is no compatibility burden, but every technical choice must be justified by the first working slice.</p>
+        </div>
+      </article>
+      <article class="card surface">
+        <div class="card-body">
+          <p class="eyebrow">North-star result</p>
+          <p class="text-lg font-bold">A developer reaches a working, inspectable MCP server in one guided command.</p>
+        </div>
+      </article>
+    </section>
+
+    <section id="product-flow" class="space-y-6">
+      <div>
+        <p class="eyebrow text-primary">User experience</p>
+        <h2 class="section-title mt-2">One command, one decision screen, one generated server.</h2>
+      </div>
+      <div class="grid lg:grid-cols-[.8fr_1.2fr] gap-5 items-stretch">
+        <div class="mockup-code bg-neutral text-neutral-content shadow-xl min-w-0">
+          <pre data-prefix="$"><code>mcp-kettel ./billing-api</code></pre>
+          <pre data-prefix="✓"><code>Found 12 FastAPI routes</code></pre>
+          <pre data-prefix=" "><code>Search: invoice</code></pre>
+          <pre data-prefix="●"><code>[x] GET  /invoices/{id}</code></pre>
+          <pre data-prefix="●"><code>[x] POST /invoices</code></pre>
+          <pre data-prefix="○"><code>[ ] DELETE /invoices/{id}</code></pre>
+          <pre data-prefix="✓"><code>Generated 2 MCP tools</code></pre>
+        </div>
+        <div class="card surface">
+          <div class="card-body">
+            <ol class="space-y-4">
+              <li class="scope-line"><strong>Discover safely.</strong> Walk supported files, honor ignore rules, parse source without importing it.</li>
+              <li class="scope-line"><strong>Explain candidates.</strong> Show method, route, tool name, source location, inputs, and a risk hint.</li>
+              <li class="scope-line"><strong>Let the human curate.</strong> All selected initially; search, toggle, select all, clear all, cancel, or confirm.</li>
+              <li class="scope-line"><strong>Generate only the selection.</strong> Produce a small MCP server that calls the existing HTTP API.</li>
+              <li class="scope-line"><strong>Prove it works.</strong> Validate generated syntax, list MCP tools, and print the exact run/config commands.</li>
+            </ol>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="go-terminal-stack" class="space-y-7">
+      <div>
+        <p class="eyebrow text-primary">Confirmed implementation stack</p>
+        <h2 class="section-title mt-2">Go end-to-end, with Charm’s terminal ecosystem.</h2>
+        <p class="mt-3 muted max-w-3xl">The CLI and generated MCP server are Go. FastAPI remains the first source framework: the Go scanner reads Python source statically, then emits a Go HTTP-proxy MCP server using the official Go SDK.</p>
+      </div>
+      <div class="grid md:grid-cols-2 xl:grid-cols-4 gap-4">
+        <article id="stack-go" class="card surface border-success/30"><div class="card-body"><span class="badge badge-success badge-soft">Language</span><h3 class="card-title">Go</h3><p class="text-sm muted">One installable CLI binary, fast scans, and straightforward cross-platform releases.</p></div></article>
+        <article id="stack-bubbletea" class="card surface"><div class="card-body"><span class="badge badge-primary badge-soft">TUI engine</span><h3 class="card-title"><a class="link" href="https://github.com/charmbracelet/bubbletea">Bubble Tea v2</a></h3><p class="text-sm muted">Owns terminal state, keyboard events, resizing, loading states, and the scan → select → generate flow.</p></div></article>
+        <article id="stack-bubbles" class="card surface"><div class="card-body"><span class="badge badge-primary badge-soft">Components</span><h3 class="card-title"><a class="link" href="https://github.com/charmbracelet/bubbles">Bubbles v2</a></h3><p class="text-sm muted">The list supplies fuzzy filtering, pagination, help, spinner, and navigation. A custom delegate renders checkboxes and risk badges.</p></div></article>
+        <article id="stack-lipgloss" class="card surface"><div class="card-body"><span class="badge badge-primary badge-soft">Styling</span><h3 class="card-title"><a class="link" href="https://github.com/charmbracelet/lipgloss">Lip Gloss v2</a></h3><p class="text-sm muted">Adaptive light/dark colors, layout, borders, emphasis, and graceful downsampling for limited terminals.</p></div></article>
+      </div>
+      <div class="grid md:grid-cols-2 gap-4">
+        <article id="stack-mcp-go" class="card surface"><div class="card-body"><span class="badge badge-info badge-soft">Generated runtime</span><h3 class="card-title"><a class="link" href="https://github.com/modelcontextprotocol/go-sdk">Official MCP Go SDK</a></h3><p class="text-sm muted">Generated servers use the official MCP implementation and its stdio transport instead of maintaining protocol code.</p></div></article>
+        <article id="stack-tree-sitter" class="card surface"><div class="card-body"><span class="badge badge-info badge-soft">Static parsing</span><h3 class="card-title"><a class="link" href="https://github.com/tree-sitter/go-tree-sitter">Official Tree-sitter Go bindings</a></h3><p class="text-sm muted">The Python grammar lets the Go scanner find FastAPI decorators and signatures without running the application.</p></div></article>
+      </div>
+      <div role="alert" class="alert alert-info alert-soft">
+        <span><strong>Minimal TUI customization:</strong> reuse Bubbles’ list and filtering. Custom code only maintains selected candidate IDs and handles Space, A, N, Enter, and Esc.</span>
+      </div>
+    </section>
+
+    <section id="architecture" class="space-y-7">
+      <div>
+        <p class="eyebrow text-primary">Technical architecture</p>
+        <h2 class="section-title mt-2">A narrow pipeline with replaceable scanners.</h2>
+        <p class="mt-3 muted max-w-3xl">One normalized candidate shape separates source discovery from terminal selection and code generation. Framework-specific logic stops at the scanner boundary.</p>
+      </div>
+
+      <figure class="card surface overflow-hidden" aria-labelledby="pipeline-caption">
+        <div class="card-body">
+          <svg viewBox="0 0 1080 260" role="img" aria-labelledby="pipeline-title pipeline-desc">
+            <title id="pipeline-title">MCP Kettel generation pipeline</title>
+            <desc id="pipeline-desc">A local directory is scanned, candidates are normalized and selected, then an MCP project is generated and verified.</desc>
+            <defs>
+              <marker id="arrow" markerWidth="10" markerHeight="10" refX="8" refY="5" orient="auto"><path d="M0 0L10 5L0 10Z" fill="currentColor" opacity=".45"/></marker>
+            </defs>
+            <g id="node-host-directory"><title>Validated local host directory</title><rect class="svg-node" x="20" y="72" rx="16" width="150" height="100"/><text class="svg-label" x="95" y="113" text-anchor="middle">Host directory</text><text class="svg-small" x="95" y="137" text-anchor="middle">read-only scan</text></g>
+            <path id="edge-host-scan" class="svg-edge" d="M170 122H215" marker-end="url(#arrow)"><title>Walk supported source files</title></path>
+            <g id="node-scanners"><title>Scanners are split into specification readers and framework adapters</title><rect class="svg-node-primary" x="220" y="45" rx="16" width="165" height="154"/><text class="svg-label" x="302" y="80" text-anchor="middle">Scanners</text><g id="scanner-spec"><title>Specification scanner: OpenAPI first, with other specs later</title><rect class="svg-subnode" x="234" y="100" rx="10" width="62" height="62"/><text class="svg-small" x="265" y="127" text-anchor="middle">Spec</text><text class="svg-small" x="265" y="146" text-anchor="middle">OpenAPI</text></g><g id="scanner-adapters"><title>Framework adapters: FastAPI AST first, then demand-driven additions</title><rect class="svg-subnode" x="307" y="100" rx="10" width="64" height="62"/><text class="svg-small" x="339" y="127" text-anchor="middle">Adapters</text><text class="svg-small" x="339" y="146" text-anchor="middle">FastAPI</text></g></g>
+            <path id="edge-scan-normalize" class="svg-edge" d="M385 122H430" marker-end="url(#arrow)"><title>Emit discovered candidates</title></path>
+            <g id="node-candidate-model"><title>Normalized candidate metadata shared by every downstream stage</title><rect class="svg-node" x="435" y="72" rx="16" width="170" height="100"/><text class="svg-label" x="520" y="111" text-anchor="middle">Candidate model</text><text class="svg-small" x="520" y="136" text-anchor="middle">route · schema · source</text></g>
+            <path id="edge-normalize-select" class="svg-edge" d="M605 122H650" marker-end="url(#arrow)"><title>Present normalized candidates</title></path>
+            <g id="node-selector"><title>Interactive terminal checklist</title><rect class="svg-node-primary" x="655" y="72" rx="16" width="155" height="100"/><text class="svg-label" x="732" y="111" text-anchor="middle">Selector</text><text class="svg-small" x="732" y="136" text-anchor="middle">all checked · filter</text></g>
+            <path id="edge-select-generate" class="svg-edge" d="M810 122H855" marker-end="url(#arrow)"><title>Pass only selected candidates</title></path>
+            <g id="node-generator"><title>Template-based MCP server generator and verification</title><rect class="svg-node" x="860" y="45" rx="16" width="195" height="154"/><text class="svg-label" x="957" y="85" text-anchor="middle">Generate + verify</text><text class="svg-small" x="957" y="113" text-anchor="middle">server templates</text><text class="svg-small" x="957" y="134" text-anchor="middle">syntax check</text><text class="svg-small" x="957" y="155" text-anchor="middle">tool-list smoke test</text></g>
+          </svg>
+          <figcaption id="pipeline-caption" class="text-sm muted">Generation-time topology. The host project is parsed, never executed.</figcaption>
+        </div>
+      </figure>
+
+      <div class="grid md:grid-cols-2 xl:grid-cols-4 gap-4">
+        <article id="module-scan" class="card surface"><div class="card-body"><span class="badge badge-info badge-soft">Module 1</span><h3 class="card-title">Discovery</h3><p class="text-sm muted"><strong>Spec scanners</strong> read OpenAPI directly. <strong>Adapters</strong> statically recognize framework code, starting with FastAPI decorators. Both emit the same candidate model.</p></div></article>
+        <article id="module-model" class="card surface"><div class="card-body"><span class="badge badge-info badge-soft">Module 2</span><h3 class="card-title">Candidate model</h3><p class="text-sm muted">Stable ID, kind, method, route, name, description, parameters, source span, confidence, risk hints.</p></div></article>
+        <article id="module-tui" class="card surface"><div class="card-body"><span class="badge badge-info badge-soft">Module 3</span><h3 class="card-title">Terminal selector</h3><p class="text-sm muted">Search without losing hidden selection state; keyboard navigation; explicit cancel and confirm.</p></div></article>
+        <article id="module-gen" class="card surface"><div class="card-body"><span class="badge badge-info badge-soft">Module 4</span><h3 class="card-title">Generator</h3><p class="text-sm muted">Render selected tools, configuration, README, and one smoke check into a new output directory.</p></div></article>
+      </div>
+    </section>
+
+    <section id="runtime" class="space-y-6">
+      <div>
+        <p class="eyebrow text-primary">Generated runtime</p>
+        <h2 class="section-title mt-2">Keep application logic where it already lives.</h2>
+      </div>
+      <figure class="card surface" aria-labelledby="runtime-caption">
+        <div class="card-body">
+          <svg viewBox="0 0 920 230" role="img" aria-labelledby="runtime-title runtime-desc">
+            <title id="runtime-title">Generated MCP server runtime</title>
+            <desc id="runtime-desc">An MCP client calls generated tools, which proxy requests to the existing API while secrets remain in environment variables.</desc>
+            <defs><marker id="arrow2" markerWidth="10" markerHeight="10" refX="8" refY="5" orient="auto"><path d="M0 0L10 5L0 10Z" fill="currentColor" opacity=".45"/></marker></defs>
+            <g id="runtime-client"><title>Any MCP-compatible client</title><rect class="svg-node" x="30" y="62" rx="18" width="190" height="105"/><text class="svg-label" x="125" y="105" text-anchor="middle">MCP client</text><text class="svg-small" x="125" y="132" text-anchor="middle">stdio / Streamable HTTP</text></g>
+            <path id="runtime-edge-mcp" class="svg-edge" d="M220 114H345" marker-end="url(#arrow2)"><title>MCP tool call</title></path>
+            <text class="svg-small" x="282" y="99" text-anchor="middle">tool call</text>
+            <g id="runtime-generated"><title>Generated MCP server contains only selected tools</title><rect class="svg-node-primary" x="350" y="42" rx="18" width="220" height="145"/><text class="svg-label" x="460" y="85" text-anchor="middle">Generated server</text><text class="svg-small" x="460" y="112" text-anchor="middle">selected tools only</text><text class="svg-small" x="460" y="133" text-anchor="middle">input validation</text><text class="svg-small" x="460" y="154" text-anchor="middle">HTTP client + errors</text></g>
+            <path id="runtime-edge-http" class="svg-edge" d="M570 114H695" marker-end="url(#arrow2)"><title>Authenticated HTTP request</title></path>
+            <text class="svg-small" x="632" y="99" text-anchor="middle">HTTP request</text>
+            <g id="runtime-existing-api"><title>Existing application API remains the source of business behavior</title><rect class="svg-node" x="700" y="62" rx="18" width="190" height="105"/><text class="svg-label" x="795" y="105" text-anchor="middle">Existing API</text><text class="svg-small" x="795" y="132" text-anchor="middle">auth · data · business logic</text></g>
+          </svg>
+          <figcaption id="runtime-caption" class="text-sm muted">Recommended v1 execution model: a generated Go MCP server proxies the existing FastAPI HTTP service. Direct imports come later and only for explicitly opted-in functions.</figcaption>
+        </div>
+      </figure>
+    </section>
+
+    <section id="deterministic-generation" class="space-y-7">
+      <div>
+        <p class="eyebrow text-primary">How generation works</p>
+        <h2 class="section-title mt-2">The MCP is generated deterministically. AI is not required.</h2>
+        <p class="mt-3 muted max-w-3xl">The generator is a template compiler: selected candidates already contain the route and JSON Schema needed to emit MCP tools. The same input and selections always produce the same files.</p>
+      </div>
+
+      <div class="grid md:grid-cols-2 xl:grid-cols-5 gap-4">
+        <article id="generation-step-1" class="card surface"><div class="card-body"><span class="badge badge-primary">1</span><h3 class="card-title text-base">Normalize</h3><p class="text-sm muted">Turn an OpenAPI operation or FastAPI route into one validated candidate.</p></div></article>
+        <article id="generation-step-2" class="card surface"><div class="card-body"><span class="badge badge-primary">2</span><h3 class="card-title text-base">Select</h3><p class="text-sm muted">Discard every unchecked candidate before any files are rendered.</p></div></article>
+        <article id="generation-step-3" class="card surface"><div class="card-body"><span class="badge badge-primary">3</span><h3 class="card-title text-base">Emit tool</h3><p class="text-sm muted">Render one MCP tool definition and HTTP handler per selected candidate.</p></div></article>
+        <article id="generation-step-4" class="card surface"><div class="card-body"><span class="badge badge-primary">4</span><h3 class="card-title text-base">Emit project</h3><p class="text-sm muted">Write the server, dependencies, environment example, README, and smoke check.</p></div></article>
+        <article id="generation-step-5" class="card surface"><div class="card-body"><span class="badge badge-primary">5</span><h3 class="card-title text-base">Verify</h3><p class="text-sm muted">Parse generated code, start the server, and confirm its MCP tool list.</p></div></article>
+      </div>
+
+      <div class="overflow-x-auto rounded-box border border-base-content/10 bg-base-100">
+        <table class="table table-zebra">
+          <thead><tr><th>Candidate metadata</th><th>Deterministic generated result</th></tr></thead>
+          <tbody>
+            <tr id="map-tool-name"><td><span class="mono">operationId</span> or route name</td><td>Sanitized, length-limited, collision-free MCP tool name.</td></tr>
+            <tr id="map-description"><td>Summary or docstring</td><td>Tool description; fallback is the HTTP method plus route.</td></tr>
+            <tr id="map-input"><td>Parameter and body JSON Schema</td><td>Go input structs/maps, MCP input schema, and runtime validation.</td></tr>
+            <tr id="map-request"><td>HTTP method, path, query, and body locations</td><td>HTTP client call with path interpolation, query parameters, and JSON body mapping.</td></tr>
+            <tr id="map-config"><td>API target</td><td>Base URL and authentication environment-variable names—never secret values.</td></tr>
+            <tr id="map-selection"><td>Selected candidate IDs</td><td>Exact allow-list of tools rendered into the server; unchecked candidates leave no code.</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div id="generation-choice" class="space-y-5">
+        <div>
+          <p class="eyebrow">Deterministic vs LLM-based</p>
+          <h3 class="text-2xl font-black mt-2">Best architecture: deterministic core, optional LLM enrichment.</h3>
+        </div>
+        <div class="grid lg:grid-cols-2 gap-5">
+          <article id="option-deterministic" class="card surface border-success/40">
+            <div class="card-body">
+              <div class="flex flex-wrap items-center gap-2"><span class="badge badge-success">Recommended core</span><h4 class="card-title">Deterministic generation</h4></div>
+              <p class="text-sm muted">OpenAPI or a framework adapter produces structured candidates. Fixed templates turn those candidates into MCP tool schemas and HTTP handlers.</p>
+              <div class="divider my-1"></div>
+              <ul class="text-sm space-y-2">
+                <li><strong>Strengths:</strong> repeatable output, offline operation, fast generation, cheap execution, easy testing, no hallucinated routes.</li>
+                <li><strong>Weaknesses:</strong> limited by the quality of source types/specs and explicitly supported framework patterns.</li>
+                <li><strong>Best for:</strong> executable schemas, request wiring, auth configuration, generated files, regeneration, and validation.</li>
+              </ul>
+            </div>
+          </article>
+          <article id="option-llm" class="card surface">
+            <div class="card-body">
+              <div class="flex flex-wrap items-center gap-2"><span class="badge badge-warning badge-soft">Optional later</span><h4 class="card-title">LLM-based generation</h4></div>
+              <p class="text-sm muted">An LLM reads source/spec context and proposes MCP tools, names, descriptions, classifications, or code.</p>
+              <div class="divider my-1"></div>
+              <ul class="text-sm space-y-2">
+                <li><strong>Strengths:</strong> understands weak documentation, can rank useful functions, improve descriptions, and suggest higher-level tools.</li>
+                <li><strong>Weaknesses:</strong> nondeterministic, slower, costs money, sends code to a provider, requires validation, and can invent incorrect behavior.</li>
+                <li><strong>Best for:</strong> suggestions that remain reviewable—not the authoritative executable wiring.</li>
+              </ul>
+            </div>
+          </article>
+        </div>
+
+        <div class="overflow-x-auto rounded-box border border-base-content/10 bg-base-100">
+          <table class="table table-zebra">
+            <thead><tr><th>Responsibility</th><th>Owner</th><th>Why</th></tr></thead>
+            <tbody>
+              <tr id="owner-discovery"><td>Route/spec discovery</td><td><span class="badge badge-success badge-soft">Deterministic</span></td><td>It must reflect code and specifications exactly.</td></tr>
+              <tr id="owner-schema"><td>JSON Schema and HTTP request mapping</td><td><span class="badge badge-success badge-soft">Deterministic</span></td><td>Incorrect wiring can call the wrong API or send malformed data.</td></tr>
+              <tr id="owner-project"><td>Go server files, dependencies, configuration, verification</td><td><span class="badge badge-success badge-soft">Deterministic</span></td><td>Generated projects must be reproducible and testable.</td></tr>
+              <tr id="owner-copy"><td>Tool name and description improvements</td><td><span class="badge badge-warning badge-soft">Optional LLM</span></td><td>Semantic phrasing benefits from context, but the user can review it.</td></tr>
+              <tr id="owner-ranking"><td>Usefulness ranking and grouping suggestions</td><td><span class="badge badge-warning badge-soft">Optional LLM</span></td><td>This is judgment rather than protocol correctness.</td></tr>
+              <tr id="owner-approval"><td>Final tool selection</td><td><span class="badge badge-primary badge-soft">Human</span></td><td>The developer owns the security and product boundary.</td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div role="alert" class="alert alert-info alert-soft">
+          <span><strong>Recommendation:</strong> ship v1 with zero LLM dependency. Later add a “Review with AI” step that receives normalized candidates and returns schema-validated suggestions. Never let AI silently invent routes, parameters, auth, or executable request wiring.</span>
+        </div>
+      </div>
+
+      <div role="alert" class="alert alert-success alert-soft">
+        <span><strong>AI’s later role is editorial, not structural:</strong> it may suggest clearer names, descriptions, groupings, or risk labels. Deterministic scanning, schema mapping, HTTP wrappers, project files, and validation remain the source of truth.</span>
+      </div>
+    </section>
+
+    <section id="extensibility" class="space-y-7">
+      <div>
+        <p class="eyebrow text-primary">Implementation structure</p>
+        <h2 class="section-title mt-2">Easy to extend at real seams—without a plugin framework.</h2>
+        <p class="mt-3 muted max-w-3xl">The normalized Candidate model is the boundary. Go scanner packages produce candidates, optional enrichers suggest presentation changes, and the deterministic Go generator consumes accepted candidates. None of those layers imports another layer’s implementation.</p>
+      </div>
+
+      <div class="grid lg:grid-cols-3 gap-4">
+        <article id="extension-scanners" class="card surface">
+          <div class="card-body"><span class="badge badge-info badge-soft">Extension seam 1</span><h3 class="card-title">Discovery scanners</h3><p class="text-sm muted">Every spec reader or framework adapter implements one small contract: receive a root directory and return validated candidates. Add a scanner file and register it explicitly.</p></div>
+        </article>
+        <article id="extension-enrichment" class="card surface border-warning/30">
+          <div class="card-body"><span class="badge badge-warning badge-soft">Extension seam 2</span><h3 class="card-title">Optional enrichment</h3><p class="text-sm muted">The base pipeline skips enrichment. A future LLM enricher receives candidates and returns suggestions for names, descriptions, tags, and ranking—never authoritative routes or schemas.</p></div>
+        </article>
+        <article id="extension-generation" class="card surface border-success/30">
+          <div class="card-body"><span class="badge badge-success badge-soft">Stable core</span><h3 class="card-title">Deterministic generator</h3><p class="text-sm muted">Consumes the same Candidate model regardless of how it was discovered or reviewed. It has no scanner imports and no AI SDK dependency.</p></div>
+        </article>
+      </div>
+
+      <div class="overflow-x-auto rounded-box border border-base-content/10 bg-base-100">
+        <table class="table table-zebra">
+          <thead><tr><th>Planned module</th><th>Single responsibility</th><th>May depend on</th></tr></thead>
+          <tbody>
+            <tr id="module-cli"><td><span class="mono">cmd/mcp-kettel/main.go</span></td><td>Validate command input and orchestrate scan → select → optional enrich → generate → verify.</td><td>Internal use-case packages; no implementation logic of its own.</td></tr>
+            <tr id="module-models"><td><span class="mono">internal/model</span></td><td>Candidate and immutable source-of-truth fields plus separate optional suggestions.</td><td>Go standard library only.</td></tr>
+            <tr id="module-scan-orchestrator"><td><span class="mono">internal/scan</span></td><td>Run an explicit ordered list of scanners, deduplicate, and sort candidates.</td><td>Model and registered scanners.</td></tr>
+            <tr id="module-spec-scanner"><td><span class="mono">internal/scan/openapi</span></td><td>Read OpenAPI documents and emit candidates.</td><td>Model plus JSON/YAML decoding.</td></tr>
+            <tr id="module-fastapi-scanner"><td><span class="mono">internal/scan/fastapi</span></td><td>Parse FastAPI decorators/signatures without importing host code.</td><td>Model plus official Tree-sitter Go/Python packages.</td></tr>
+            <tr id="module-selector"><td><span class="mono">internal/tui</span></td><td>Bubble Tea state, Bubbles list/filtering, checkbox selection, and Lip Gloss styles.</td><td>Model and Charm v2 libraries.</td></tr>
+            <tr id="module-enricher"><td><span class="mono">internal/ai</span> <span class="badge badge-ghost badge-sm">later</span></td><td>Ask a configured provider for schema-validated suggestions.</td><td>Model and one isolated provider client.</td></tr>
+            <tr id="module-generator"><td><span class="mono">internal/generate</span></td><td>Render selected candidates into fixed Go MCP project templates embedded in the CLI.</td><td>Model, <span class="mono">text/template</span>, and <span class="mono">embed</span>; never scanners or AI.</td></tr>
+            <tr id="module-verify"><td><span class="mono">internal/verify</span></td><td>Go format/build, MCP tool-list, and fixture-call smoke checks.</td><td>Generated output only.</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="grid md:grid-cols-2 gap-5">
+        <article class="card surface">
+          <div class="card-body"><h3 class="card-title">Adding a framework later</h3><ol class="list-decimal ml-5 text-sm space-y-2 muted"><li>Add one scanner module.</li><li>Map its routes to Candidate.</li><li>Run the shared scanner contract fixture.</li><li>Add it to the explicit scanner list.</li></ol><p class="text-sm font-semibold mt-2">Selector and generator remain unchanged.</p></div>
+        </article>
+        <article class="card surface">
+          <div class="card-body"><h3 class="card-title">Adding AI later</h3><ol class="list-decimal ml-5 text-sm space-y-2 muted"><li>Add one provider-neutral enricher boundary when the second implementation exists.</li><li>Keep provider SDKs inside <span class="mono">internal/ai</span>.</li><li>Validate structured suggestions.</li><li>Require user acceptance before applying them.</li></ol><p class="text-sm font-semibold mt-2">Discovery and executable generation remain deterministic.</p></div>
+        </article>
+      </div>
+
+      <div role="alert" class="alert alert-warning alert-soft">
+        <span><strong>Deliberate limit:</strong> no dynamic plugin discovery, dependency-injection container, or generator interface in v1. Use explicit registration. Introduce another abstraction only when a real second implementation needs it.</span>
+      </div>
+    </section>
+
+    <section id="roadmap" class="space-y-7">
+      <div>
+        <p class="eyebrow text-primary">Delivery roadmap</p>
+        <h2 class="section-title mt-2">Seven gates, each ending in something runnable.</h2>
+        <p class="mt-3 muted">Relative effort assumes one developer using Go, Bubble Tea v2, Bubbles v2, and Lip Gloss v2.</p>
+      </div>
+      <div class="overflow-x-auto rounded-box border border-base-content/10 bg-base-100">
+        <table class="table table-zebra">
+          <thead><tr><th>Gate</th><th>Build</th><th>Exit criterion</th><th>Effort</th><th>Depends on</th></tr></thead>
+          <tbody>
+            <tr id="phase-0"><td><span class="badge badge-success">0</span> Decisions</td><td>Go implementation, FastAPI source, Go HTTP-proxy MCP output, Charm TUI, deterministic v1 without AI.</td><td><strong>Complete.</strong> The working CLI name remains MCP Kettel.</td><td><span class="badge badge-success badge-soft">Done</span></td><td>—</td></tr>
+            <tr id="phase-1"><td><span class="badge badge-primary">1</span> Skeleton</td><td>CLI path validation, help/version, ignore-aware file walk, structured diagnostics.</td><td>Invalid paths fail cleanly; scan never enters ignored dependency/build folders.</td><td><span class="badge badge-soft badge-warning">M</span></td><td>0</td></tr>
+            <tr id="phase-2"><td><span class="badge badge-primary">2</span> Discovery</td><td>OpenAPI detection plus FastAPI decorator parsing into the candidate model.</td><td>Fixture project yields stable candidates with route, schema, and source location—without imports.</td><td><span class="badge badge-soft badge-warning">M</span></td><td>1</td></tr>
+            <tr id="phase-3"><td><span class="badge badge-primary">3</span> Selection</td><td>Bubble Tea screen using Bubbles list/filter/help and Lip Gloss styling; all checked; toggle, select all, clear all, cancel, confirm.</td><td>Filtering preserves hidden selections; adaptive colors remain readable; cancel writes nothing.</td><td><span class="badge badge-soft badge-warning">M</span></td><td>2</td></tr>
+            <tr id="phase-4"><td><span class="badge badge-primary">4</span> Generation</td><td>Go MCP proxy templates using the official MCP Go SDK, base URL/env config, inputs, HTTP errors, selected tools only.</td><td>Generated Go server builds, starts, and lists exactly the chosen tool names.</td><td><span class="badge badge-soft badge-error">L</span></td><td>2, 3</td></tr>
+            <tr id="phase-5"><td><span class="badge badge-primary">5</span> Verification</td><td>Syntax check, MCP smoke test, fixture API call, overwrite protection, actionable summary.</td><td>One command proves scan → select → generate → invoke end to end.</td><td><span class="badge badge-soft badge-warning">M</span></td><td>4</td></tr>
+            <tr id="phase-6"><td><span class="badge badge-secondary">6</span> Productize</td><td>Versioned Go binaries, README, troubleshooting, and CI/release builds for supported OS/architectures.</td><td>A fresh machine can install one binary and generate the example Go server from documented steps.</td><td><span class="badge badge-soft badge-warning">M</span></td><td>5</td></tr>
+            <tr id="phase-7"><td><span class="badge badge-ghost">7</span> Expand</td><td>Add adapters one at a time; explicit functions; optional AI enrichment last.</td><td>Each adapter passes the same candidate and generation contract tests.</td><td><span class="badge badge-soft badge-error">Ongoing</span></td><td>6 + demand</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <section id="increments" class="space-y-7">
+      <div>
+        <p class="eyebrow text-primary">Scope ladder</p>
+        <h2 class="section-title mt-2">Ship capability in rings, not all at once.</h2>
+      </div>
+      <div class="grid md:grid-cols-2 xl:grid-cols-4 gap-4">
+        <article class="card surface phase-card">
+          <div class="card-body"><span class="badge badge-primary">MVP</span><h3 class="card-title">Prove the loop</h3><ul class="text-sm space-y-2 muted"><li>Go CLI binary</li><li>Local FastAPI projects</li><li>OpenAPI + static decorators</li><li>Charm terminal selection</li><li>Generated Go HTTP-proxy MCP</li></ul></div>
+        </article>
+        <article class="card surface phase-card">
+          <div class="card-body"><span class="badge badge-secondary">v1</span><h3 class="card-title">Make it dependable</h3><ul class="text-sm space-y-2 muted"><li>Auth environment mapping</li><li>Regeneration/overwrite safety</li><li>Better schema extraction</li><li>Installable release</li><li>macOS, Linux, Windows CI</li></ul></div>
+        </article>
+        <article class="card surface phase-card" data-later="true">
+          <div class="card-body"><span class="badge badge-ghost">vNext</span><h3 class="card-title">Follow real demand</h3><ul class="text-sm space-y-2 muted"><li>Express or another top framework</li><li>GraphQL/OpenAPI refinement</li><li>Explicit function opt-in</li><li>Additional output runtime</li><li>Non-interactive CI mode</li></ul></div>
+        </article>
+        <article class="card surface phase-card" data-later="true">
+          <div class="card-body"><span class="badge badge-warning badge-soft">Later</span><h3 class="card-title">AI enhancement</h3><ul class="text-sm space-y-2 muted"><li>Provider-neutral adapter</li><li>User-owned credentials</li><li>Description/name suggestions</li><li>Risk classification suggestions</li><li>Never required for generation</li></ul></div>
+        </article>
+      </div>
+      <div role="alert" class="alert alert-warning alert-soft">
+        <span><strong>Explicitly skipped in MVP:</strong> “every function,” every language, direct application imports, a plugin framework, hosted services, Docker templates, telemetry, and AI orchestration. Add only after measured demand.</span>
+      </div>
+    </section>
+
+    <section id="contracts" class="space-y-7">
+      <div>
+        <p class="eyebrow text-primary">Core contracts</p>
+        <h2 class="section-title mt-2">The minimum stable data the pipeline needs.</h2>
+      </div>
+      <div class="grid lg:grid-cols-2 gap-5">
+        <article class="card surface">
+          <div class="card-body">
+            <h3 class="card-title">Candidate</h3>
+            <div class="mockup-code bg-neutral text-neutral-content text-sm">
+              <pre data-prefix=""><code>id              stable source-derived ID</code></pre>
+              <pre data-prefix=""><code>kind            http_route | function</code></pre>
+              <pre data-prefix=""><code>tool_name       proposed MCP name</code></pre>
+              <pre data-prefix=""><code>method + route  when HTTP-backed</code></pre>
+              <pre data-prefix=""><code>input_schema    JSON Schema</code></pre>
+              <pre data-prefix=""><code>source          file + line</code></pre>
+              <pre data-prefix=""><code>risk            read | write | destructive?</code></pre>
+            </div>
+          </div>
+        </article>
+        <article class="card surface">
+          <div class="card-body">
+            <h3 class="card-title">Generated project</h3>
+            <div class="mockup-code bg-neutral text-neutral-content text-sm">
+              <pre data-prefix=""><code>server.go        selected MCP tools</code></pre>
+              <pre data-prefix=""><code>go.mod           official MCP Go SDK</code></pre>
+              <pre data-prefix=""><code>.env.example     names, never secrets</code></pre>
+              <pre data-prefix=""><code>README.md        run + client config</code></pre>
+              <pre data-prefix=""><code>server_test.go   list/call proof</code></pre>
+            </div>
+          </div>
+        </article>
+      </div>
+    </section>
+
+    <section id="quality" class="space-y-7">
+      <div>
+        <p class="eyebrow text-primary">Quality gates</p>
+        <h2 class="section-title mt-2">Test the seams where generated systems break.</h2>
+      </div>
+      <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-4">
+        <article class="card surface"><div class="card-body"><span class="badge badge-success badge-soft">Scanner</span><h3 class="card-title">Golden fixture</h3><p class="text-sm muted">One small FastAPI app covers path/query/body inputs, duplicate names, ignored files, and destructive routes.</p></div></article>
+        <article class="card surface"><div class="card-body"><span class="badge badge-success badge-soft">Selector</span><h3 class="card-title">State invariants</h3><p class="text-sm muted">Filtering never changes selection; select/clear all have explicit scope; cancel never writes.</p></div></article>
+        <article class="card surface"><div class="card-body"><span class="badge badge-success badge-soft">Generator</span><h3 class="card-title">Snapshot + build</h3><p class="text-sm muted">Generated files are deterministic, pass <span class="mono">gofmt</span>/<span class="mono">go test</span>, and contain only selected candidate IDs.</p></div></article>
+        <article class="card surface"><div class="card-body"><span class="badge badge-success badge-soft">Runtime</span><h3 class="card-title">MCP smoke test</h3><p class="text-sm muted">Start generated server, list tools, call one read route, and verify mapped API errors.</p></div></article>
+        <article class="card surface"><div class="card-body"><span class="badge badge-success badge-soft">Safety</span><h3 class="card-title">No project execution</h3><p class="text-sm muted">Scanner tests include a module with a failing import side effect and prove it is never imported.</p></div></article>
+        <article class="card surface"><div class="card-body"><span class="badge badge-success badge-soft">Release</span><h3 class="card-title">Fresh install</h3><p class="text-sm muted">CI installs the CLI, generates from the fixture, and runs the generated smoke test.</p></div></article>
+      </div>
+    </section>
+
+    <section id="risks" class="space-y-7">
+      <div>
+        <p class="eyebrow text-primary">Risk register</p>
+        <h2 class="section-title mt-2">Five risks deserve design attention now.</h2>
+      </div>
+      <div class="overflow-x-auto rounded-box border border-base-content/10 bg-base-100">
+        <table class="table table-zebra">
+          <thead><tr><th>Risk</th><th>Impact</th><th>Control in the plan</th><th>Residual risk</th></tr></thead>
+          <tbody>
+            <tr id="risk-dynamic"><td>Dynamic routes evade static analysis</td><td><span class="badge badge-warning badge-soft">Medium</span></td><td>Prefer OpenAPI; show confidence/source; document unsupported patterns.</td><td>Some candidates remain undiscovered.</td></tr>
+            <tr id="risk-unsafe"><td>Unsafe/destructive API becomes a tool</td><td><span class="badge badge-error badge-soft">High</span></td><td>Human selection, method-based risk hints, destructive metadata, all details visible.</td><td>User can still opt in intentionally.</td></tr>
+            <tr id="risk-schema"><td>Source types do not map cleanly to JSON Schema</td><td><span class="badge badge-warning badge-soft">Medium</span></td><td>Fail candidate validation visibly; never silently emit a weak schema.</td><td>Manual API cleanup may be required.</td></tr>
+            <tr id="risk-runtime"><td>Generated server compiles but cannot call the API</td><td><span class="badge badge-error badge-soft">High</span></td><td>Base URL/auth configuration, runtime smoke test, error-preserving HTTP wrapper.</td><td>Environment-specific network/auth failures.</td></tr>
+            <tr id="risk-parser-build"><td>Tree-sitter’s native parser complicates cross-platform Go releases</td><td><span class="badge badge-warning badge-soft">Medium</span></td><td>Pin official bindings/grammar, test every release target, and publish only verified binary combinations.</td><td>Release builds require native toolchains.</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <section id="decisions" class="space-y-7">
+      <div>
+        <p class="eyebrow text-primary">Decisions recorded</p>
+        <h2 class="section-title mt-2">The first implementation slice is now fixed.</h2>
+        <p class="mt-3 muted">These choices came from the Lavish review and are no longer open questions.</p>
+      </div>
+      <div class="grid md:grid-cols-2 xl:grid-cols-4 gap-4">
+        <article id="decision-language" class="card surface border-success/30"><div class="card-body"><span class="badge badge-success badge-soft">Confirmed</span><h3 class="card-title">Go + Charm</h3><p class="text-sm muted">Bubble Tea, Bubbles, and Lip Gloss v2 power the CLI.</p></div></article>
+        <article id="decision-source" class="card surface border-success/30"><div class="card-body"><span class="badge badge-success badge-soft">Confirmed</span><h3 class="card-title">FastAPI source</h3><p class="text-sm muted">First framework adapter, parsed statically from Go.</p></div></article>
+        <article id="decision-runtime" class="card surface border-success/30"><div class="card-body"><span class="badge badge-success badge-soft">Confirmed</span><h3 class="card-title">HTTP proxy</h3><p class="text-sm muted">Generated MCP tools call the existing running API.</p></div></article>
+        <article id="decision-ai" class="card surface border-success/30"><div class="card-body"><span class="badge badge-success badge-soft">Confirmed</span><h3 class="card-title">Deterministic v1</h3><p class="text-sm muted">AI is deferred and remains optional enhancement work.</p></div></article>
+      </div>
+    </section>
+
+    <section id="definition-of-done" class="card surface border-primary/30">
+      <div class="card-body lg:flex-row lg:items-center lg:justify-between gap-6">
+        <div>
+          <p class="eyebrow text-primary">MVP definition of done</p>
+          <h2 class="card-title text-2xl mt-2">The Go CLI turns a fresh FastAPI fixture into a callable Go MCP server without AI or manual code edits.</h2>
+          <p class="mt-2 muted">The scanner executes no host code, Bubble Tea controls the exact tool set, cancellation writes nothing, and the generated Go smoke test passes.</p>
+        </div>
+        <span class="badge badge-success badge-xl whitespace-nowrap">Ready to build</span>
+      </div>
+    </section>
+  </main>
+
+  <footer class="border-t border-base-content/10 mt-10">
+    <div class="shell py-8 flex flex-col sm:flex-row gap-3 justify-between text-sm muted">
+      <span>MCP Kettel project plan · 2026-08-29</span>
+      <span>Based on the current <span class="mono">REQUIREMENTS.md</span></span>
+    </div>
+  </footer>
+
+</body>
+</html>

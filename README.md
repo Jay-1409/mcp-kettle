@@ -10,7 +10,7 @@
 
 ## What's in it for you
 
-- Find FastAPI routes without running or importing the source project.
+- Find FastAPI or Express routes without running or importing the source project.
 - Review discovered routes before exposing anything.
 - Search, select, or clear routes from an interactive terminal checklist.
 - Generate a standalone Go MCP server with only the routes you chose.
@@ -19,6 +19,7 @@
 ## Features
 
 - Static FastAPI route discovery.
+- Static Express route discovery for JavaScript and TypeScript projects.
 - Support for `GET`, `POST`, `PUT`, `PATCH`, `DELETE`, `OPTIONS`, and `HEAD`.
 - Primitive path and query parameters: `str`, `int`, `float`, and `bool`.
 - Deterministic MCP server generation.
@@ -27,7 +28,7 @@
 
 ## Quick Start
 
-Install Go 1.24 or newer, then run:
+Install Go 1.24 or newer, then run Kettel against a FastAPI or Express project:
 
 ```sh
 go run ./cmd/mcp-kettel \
@@ -41,6 +42,14 @@ Try the included example:
 go run ./cmd/mcp-kettel \
   --input ./example/sample-project \
   --output ./generated-mcp
+```
+
+Try the Express fixture:
+
+```sh
+go run ./cmd/mcp-kettel \
+  --input ./example/express-project \
+  --output ./generated-express-mcp
 ```
 
 The checklist starts with every route selected. Use `g` to cycle grouping by source file, HTTP method, or route prefix. Groups start collapsed; highlight a group and press `space` to expand or collapse it. Once expanded, use `space` on a route to toggle one, `a` to select all, `n` to clear all, `/` to filter, `enter` to generate, or `esc` to cancel.
@@ -65,6 +74,8 @@ go run .
 ```
 
 If `--output` is omitted, Kettel writes to `<input>/mcp-server`.
+
+FastAPI routes support primitive path and query parameters. Express routes support literal `app.get(...)`, `router.post(...)`, and related method calls with literal paths and path parameters such as `/users/:id`.
 
 ## Documentation
 

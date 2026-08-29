@@ -3,8 +3,8 @@
 MCP Kettel follows a short pipeline:
 
 1. `cmd/mcp-kettel` validates the input and output paths.
-2. `internal/scan` finds Python source files.
-3. `internal/scan/fastapi` parses supported decorators and produces normalized candidates.
+2. `internal/scan` finds supported Python, JavaScript, and TypeScript source files.
+3. `internal/scan/fastapi` and `internal/scan/express` parse supported route declarations and produce normalized candidates.
 4. `internal/tui` lets the user filter, group, and select candidates.
 5. `internal/generate` writes a Go MCP server for the selected candidates.
 

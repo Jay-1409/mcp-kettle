@@ -50,7 +50,7 @@ func sourceFiles(root string) ([]string, error) {
 		if entry.IsDir() && path != root && skippedDir(entry.Name()) {
 			return filepath.SkipDir
 		}
-		if !entry.IsDir() && filepath.Ext(path) == ".py" {
+		if !entry.IsDir() && supportedExtension(filepath.Ext(path)) {
 			files = append(files, path)
 		}
 		return nil
@@ -59,7 +59,7 @@ func sourceFiles(root string) ([]string, error) {
 }
 
 func gitFiles(root string) ([]string, error) {
-	output, err := exec.Command("git", "-C", root, "ls-files", "-co", "--exclude-standard", "-z", "--", "*.py").Output()
+	output, err := exec.Command("git", "-C", root, "ls-files", "-co", "--exclude-standard", "-z", "--", "*.py", "*.js", "*.jsx", "*.ts", "*.tsx", "*.mjs", "*.cjs").Output()
 	if err != nil {
 		return nil, err
 	}
@@ -70,6 +70,15 @@ func gitFiles(root string) ([]string, error) {
 		}
 	}
 	return files, nil
+}
+
+func supportedExtension(extension string) bool {
+	switch extension {
+	case ".py", ".js", ".jsx", ".ts", ".tsx", ".mjs", ".cjs":
+		return true
+	default:
+		return false
+	}
 }
 
 func skippedDir(name string) bool {
