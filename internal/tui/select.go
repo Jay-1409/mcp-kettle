@@ -96,7 +96,7 @@ func Select(candidates []model.Candidate) ([]model.Candidate, bool, error) {
 	delegate := list.NewDefaultDelegate()
 	delegate.Styles.FilterMatch = lipgloss.NewStyle().
 		Bold(true).
-		Foreground(lipgloss.Color("#F793FF")).
+		Foreground(lipgloss.Color("#FFD75F")).
 		Background(lipgloss.NoColor{})
 	m.list = list.New(m.items(), delegate, 100, 24)
 	m.list.Title = "MCP Kettel · choose API tools"
