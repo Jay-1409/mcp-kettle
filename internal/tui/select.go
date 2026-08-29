@@ -15,6 +15,7 @@ import (
 type item struct {
 	candidate model.Candidate
 	selected  bool
+	filter    *string
 }
 
 type groupItem struct {
@@ -66,11 +67,11 @@ func (i item) Title() string {
 	if i.selected {
 		mark = "●"
 	}
-	return fmt.Sprintf("%s  %s", mark, i.candidate.Label())
+	return highlightMatches(fmt.Sprintf("%s  %s", mark, i.candidate.Label()), i.filter)
 }
 
 func (i item) Description() string {
-	return i.candidate.ToolName + " · " + i.candidate.Description
+	return highlightMatches(i.candidate.ToolName+" · "+i.candidate.Description, i.filter)
 }
 
 func (i item) FilterValue() string {
@@ -84,6 +85,7 @@ type selectionModel struct {
 	grouping   grouping
 	expanded   map[string]bool
 	focused    string
+	filter     *string
 	cancelled  bool
 }
 
@@ -92,14 +94,11 @@ func Select(candidates []model.Candidate) ([]model.Candidate, bool, error) {
 	for _, candidate := range candidates {
 		selected[candidate.ID] = true
 	}
-	m := selectionModel{candidates: candidates, selected: selected, expanded: make(map[string]bool)}
+	m := selectionModel{candidates: candidates, selected: selected, expanded: make(map[string]bool), filter: new(string)}
 	delegate := list.NewDefaultDelegate()
 	delegate.Styles.NormalTitle = delegate.Styles.NormalTitle.UnsetForeground()
 	delegate.Styles.SelectedTitle = delegate.Styles.SelectedTitle.UnsetForeground()
-	delegate.Styles.FilterMatch = lipgloss.NewStyle().
-		Bold(true).
-		Foreground(lipgloss.Color("#FFD75F")).
-		Background(lipgloss.NoColor{})
+	delegate.Styles.FilterMatch = lipgloss.NewStyle()
 	m.list = list.New(m.items(), delegate, 100, 24)
 	m.list.Title = "MCP Kettel · choose API tools"
 	m.list.AdditionalFullHelpKeys = nil
@@ -161,6 +160,7 @@ func (m selectionModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 	}
 	var cmd tea.Cmd
 	m.list, cmd = m.list.Update(msg)
+	*m.filter = m.list.FilterValue()
 	if current, ok := m.list.SelectedItem().(groupItem); ok {
 		m.focused = current.name
 	} else {
@@ -225,9 +225,30 @@ func (m selectionModel) items() []list.Item {
 func (m selectionModel) candidateItems(candidates []model.Candidate) []list.Item {
 	items := make([]list.Item, 0, len(m.candidates))
 	for _, candidate := range candidates {
-		items = append(items, item{candidate: candidate, selected: m.selected[candidate.ID]})
+		items = append(items, item{candidate: candidate, selected: m.selected[candidate.ID], filter: m.filter})
 	}
 	return items
+}
+
+func highlightMatches(text string, filter *string) string {
+	if filter == nil || *filter == "" {
+		return text
+	}
+	needle := strings.ToLower(*filter)
+	remaining, lower := text, strings.ToLower(text)
+	style := lipgloss.NewStyle().Bold(true).Foreground(lipgloss.Color("#FFD75F"))
+	var highlighted strings.Builder
+	for {
+		index := strings.Index(lower, needle)
+		if index < 0 {
+			highlighted.WriteString(remaining)
+			return highlighted.String()
+		}
+		highlighted.WriteString(remaining[:index])
+		highlighted.WriteString(style.Render(remaining[index : index+len(needle)]))
+		remaining = remaining[index+len(needle):]
+		lower = lower[index+len(needle):]
+	}
 }
 
 func (m selectionModel) groupKey(candidate model.Candidate) string {
