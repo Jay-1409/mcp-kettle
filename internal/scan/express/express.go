@@ -11,7 +11,7 @@ import (
 )
 
 var (
-	routePattern = regexp.MustCompile(`(?m)^[ \t]*(?:[A-Za-z_$][\w$]*|express\.Router\(\))\.(get|post|put|patch|delete|options|head)\(\s*["']([^"']+)["']`)
+	routePattern = regexp.MustCompile(`(?m)^[ \t]*([A-Za-z_$][\w$]*)\.(get|post|put|patch|delete|options|head)\(\s*["']([^"']+)["']`)
 	paramPattern = regexp.MustCompile(`:([A-Za-z_]\w*)`)
 )
 
@@ -29,26 +29,40 @@ func ScanFile(root, path string) ([]model.Candidate, error) {
 	if !strings.Contains(text, "express") {
 		return nil, nil
 	}
+	routes, err := scanRoutes(root, path, source)
+	if err != nil {
+		return nil, err
+	}
+	var candidates []model.Candidate
+	for _, found := range routes {
+		candidates = append(candidates, found...)
+	}
+	return candidates, nil
+}
+
+func scanRoutes(root, path string, source []byte) (map[string][]model.Candidate, error) {
+	text := string(source)
 	relative, err := filepath.Rel(root, path)
 	if err != nil {
 		return nil, err
 	}
 
 	routes := routePattern.FindAllStringSubmatchIndex(text, -1)
-	candidates := make([]model.Candidate, 0, len(routes))
+	candidates := make(map[string][]model.Candidate)
 	for _, match := range routes {
-		method := strings.ToUpper(text[match[2]:match[3]])
-		route := text[match[4]:match[5]]
+		owner := text[match[2]:match[3]]
+		method := strings.ToUpper(text[match[4]:match[5]])
+		route := text[match[6]:match[7]]
 		if strings.Contains(route, "*") || strings.Contains(route, "?") {
 			continue
 		}
-		normalized := paramPattern.ReplaceAllString(route, "{$1}")
+		normalized := normalizePath(route)
 		parameters := make([]model.Parameter, 0)
 		for _, parameter := range paramPattern.FindAllStringSubmatch(route, -1) {
 			parameters = append(parameters, model.Parameter{Name: parameter[1], Location: "path", Type: "str", Required: true})
 		}
 		line := 1 + strings.Count(text[:match[0]], "\n")
-		candidates = append(candidates, model.Candidate{
+		candidates[owner] = append(candidates[owner], model.Candidate{
 			ID:          fmt.Sprintf("%s %s@%s:%d", method, normalized, filepath.ToSlash(relative), line),
 			ToolName:    model.ToolName(method, normalized),
 			Description: fmt.Sprintf("Call %s %s", method, normalized),
@@ -61,3 +75,5 @@ func ScanFile(root, path string) ([]model.Candidate, error) {
 	}
 	return candidates, nil
 }
+
+func normalizePath(route string) string { return paramPattern.ReplaceAllString(route, "{$1}") }

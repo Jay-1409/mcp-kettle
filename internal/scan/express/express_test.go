@@ -30,3 +30,46 @@ app.get("/search/*", handler);
 		t.Fatalf("unexpected candidate: %#v", candidates[0])
 	}
 }
+
+func TestScanResolvesNestedExpressRouterMounts(t *testing.T) {
+	root := t.TempDir()
+	files := map[string]string{
+		"app.js": `const express = require("express");
+const apiRouter = require("./routes/api");
+const app = express();
+app.use("/api/:version", apiRouter);
+`,
+		"routes/api.js": `const express = require("express");
+const usersRouter = require("./users");
+const router = express.Router();
+router.use("/users", usersRouter);
+module.exports = router;
+`,
+		"routes/users.js": `import { Router } from "express";
+const router = Router();
+router.get("/:userId", handler);
+export default router;
+`,
+	}
+	paths := make([]string, 0, len(files))
+	for relative, source := range files {
+		file := filepath.Join(root, relative)
+		if err := os.MkdirAll(filepath.Dir(file), 0o755); err != nil {
+			t.Fatal(err)
+		}
+		if err := os.WriteFile(file, []byte(source), 0o644); err != nil {
+			t.Fatal(err)
+		}
+		paths = append(paths, file)
+	}
+	candidates, err := Scan(root, paths)
+	if err != nil {
+		t.Fatal(err)
+	}
+	if len(candidates) != 1 || candidates[0].Route != "/api/{version}/users/{userId}" {
+		t.Fatalf("unexpected candidates: %#v", candidates)
+	}
+	if len(candidates[0].Parameters) != 2 {
+		t.Fatalf("unexpected parameters: %#v", candidates[0].Parameters)
+	}
+}

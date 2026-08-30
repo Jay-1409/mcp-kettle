@@ -21,7 +21,7 @@
 - Static FastAPI route discovery.
 - Recursive FastAPI router and prefix resolution.
 - Visibility for routes whose parameter schemas are not ready for generation.
-- Static Express route discovery for JavaScript and TypeScript projects.
+- Recursive Express router and mount-prefix resolution for JavaScript and TypeScript projects.
 - Support for `GET`, `POST`, `PUT`, `PATCH`, `DELETE`, `OPTIONS`, and `HEAD`.
 - Primitive path and query parameters: `str`, `int`, `float`, and `bool`.
 - Deterministic MCP server generation.
@@ -77,7 +77,7 @@ go run .
 
 If `--output` is omitted, Kettel writes to `<input>/mcp-server`.
 
-FastAPI routes support primitive path and query parameters. Express routes support literal `app.get(...)`, `router.post(...)`, and related method calls with literal paths and path parameters such as `/users/:id`.
+FastAPI routes support primitive path and query parameters. Express routes support literal `app.get(...)`, `router.post(...)`, nested `.use()` mounts, relative ES module or CommonJS router imports, and path parameters such as `/users/:id`.
 
 ## Documentation
 
