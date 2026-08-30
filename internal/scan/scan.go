@@ -11,9 +11,25 @@ import (
 	"mcp-kettel/internal/model"
 )
 
+type Scanner func(root string, files []string) ([]model.Candidate, error)
+
 type FileScanner func(root, path string) ([]model.Candidate, error)
 
-func Directory(root string, scanners ...FileScanner) ([]model.Candidate, error) {
+func Files(scanner FileScanner) Scanner {
+	return func(root string, files []string) ([]model.Candidate, error) {
+		var candidates []model.Candidate
+		for _, path := range files {
+			found, err := scanner(root, path)
+			if err != nil {
+				return nil, fmt.Errorf("scan %s: %w", path, err)
+			}
+			candidates = append(candidates, found...)
+		}
+		return candidates, nil
+	}
+}
+
+func Directory(root string, scanners ...Scanner) ([]model.Candidate, error) {
 	root, err := filepath.Abs(root)
 	if err != nil {
 		return nil, err
@@ -24,14 +40,12 @@ func Directory(root string, scanners ...FileScanner) ([]model.Candidate, error) 
 	}
 
 	var candidates []model.Candidate
-	for _, path := range files {
-		for _, scanner := range scanners {
-			found, err := scanner(root, path)
-			if err != nil {
-				return nil, fmt.Errorf("scan %s: %w", path, err)
-			}
-			candidates = append(candidates, found...)
+	for _, scanner := range scanners {
+		found, err := scanner(root, files)
+		if err != nil {
+			return nil, err
 		}
+		candidates = append(candidates, found...)
 	}
 	sort.Slice(candidates, func(i, j int) bool { return candidates[i].ID < candidates[j].ID })
 	return candidates, nil

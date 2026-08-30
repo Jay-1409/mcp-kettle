@@ -42,7 +42,7 @@ func run(args []string) error {
 		return fmt.Errorf("host path is not a directory: %s", host)
 	}
 
-	candidates, err := scan.Directory(host, fastapi.ScanFile, express.ScanFile)
+	candidates, err := scan.Directory(host, fastapi.Scan, scan.Files(express.ScanFile))
 	if err != nil {
 		return err
 	}

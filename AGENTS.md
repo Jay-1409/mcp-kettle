@@ -16,6 +16,7 @@ MCP Kettel is a Go CLI that statically scans local FastAPI source, lets users se
 - `internal/scan` — source-file discovery
 - `internal/scan/fastapi` — FastAPI static scanning
 - `internal/scan/express` — Express static scanning
+- `internal/scan/routegraph` — reusable router mounting and prefix resolution
 - `internal/model` — normalized candidate types
 - `internal/tui` — interactive selection
 - `internal/generate` — generated Go MCP server

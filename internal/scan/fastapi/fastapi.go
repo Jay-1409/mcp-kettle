@@ -14,7 +14,7 @@ import (
 )
 
 var (
-	routePattern = regexp.MustCompile(`(?m)^[ \t]*@(?:[A-Za-z_]\w*\.)?(get|post|put|patch|delete|options|head)\(\s*["']([^"']+)["']`)
+	routePattern = regexp.MustCompile(`(?m)^[ \t]*@([A-Za-z_]\w*)\.(get|post|put|patch|delete|options|head)\(\s*["']([^"']+)["']`)
 	funcPattern  = regexp.MustCompile(`(?m)^[ \t]*(?:async\s+)?def\s+([A-Za-z_]\w*)\s*\(([^)]*)\)`)
 	paramPattern = regexp.MustCompile(`^([A-Za-z_]\w*)\s*(?::\s*([A-Za-z_]\w*))?\s*(?:=\s*(.+))?$`)
 )
@@ -31,6 +31,18 @@ func ScanFile(root, path string) ([]model.Candidate, error) {
 		return nil, nil
 	}
 
+	routes, err := scanRoutes(root, path, source)
+	if err != nil {
+		return nil, err
+	}
+	var candidates []model.Candidate
+	for _, found := range routes {
+		candidates = append(candidates, found...)
+	}
+	return candidates, nil
+}
+
+func scanRoutes(root, path string, source []byte) (map[string][]model.Candidate, error) {
 	parser := tree_sitter.NewParser()
 	defer parser.Close()
 	if err := parser.SetLanguage(tree_sitter.NewLanguage(tree_sitter_python.Language())); err != nil {
@@ -46,7 +58,7 @@ func ScanFile(root, path string) ([]model.Candidate, error) {
 	if err != nil {
 		return nil, err
 	}
-	var candidates []model.Candidate
+	candidates := make(map[string][]model.Candidate)
 	// ponytail: literal decorators and primitive parameters cover the first slice;
 	// switch to Tree-sitter queries plus symbol resolution when aliases or models matter.
 	walk(tree.RootNode(), func(node *tree_sitter.Node) {
@@ -59,18 +71,18 @@ func ScanFile(root, path string) ([]model.Candidate, error) {
 			return
 		}
 		for _, route := range routePattern.FindAllStringSubmatch(text, -1) {
-			parameters, ok := parseParameters(function[2], route[2])
+			parameters, ok := parseParameters(function[2], route[3])
 			if !ok {
 				continue
 			}
-			method := strings.ToUpper(route[1])
+			method := strings.ToUpper(route[2])
 			line := int(node.StartPosition().Row) + 1
-			candidates = append(candidates, model.Candidate{
-				ID:          fmt.Sprintf("%s %s@%s:%d", method, route[2], filepath.ToSlash(relative), line),
-				ToolName:    model.ToolName(method, route[2]),
-				Description: fmt.Sprintf("Call %s %s", method, route[2]),
+			candidates[route[1]] = append(candidates[route[1]], model.Candidate{
+				ID:          fmt.Sprintf("%s %s@%s:%d", method, route[3], filepath.ToSlash(relative), line),
+				ToolName:    model.ToolName(method, route[3]),
+				Description: fmt.Sprintf("Call %s %s", method, route[3]),
 				Method:      method,
-				Route:       route[2],
+				Route:       route[3],
 				SourceFile:  filepath.ToSlash(relative),
 				SourceLine:  line,
 				Parameters:  parameters,
