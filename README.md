@@ -1,6 +1,6 @@
 # MCP Kettel
 
-> *Turn useful routes in a local API project into an MCP server.*
+> *Turn routes in from API's into an MCP server.*
 
 [![License: not specified](https://img.shields.io/badge/license-not%20specified-lightgrey.svg)](./LICENSE)
 [![Version: 0.1.0](https://img.shields.io/badge/version-0.1.0-blue.svg)](./go.mod)
@@ -18,7 +18,6 @@
 
 ## Features
 
-- Static FastAPI route discovery.
 - Recursive FastAPI router and prefix resolution.
 - Visibility for routes whose parameter schemas are not ready for generation.
 - Recursive Express router and mount-prefix resolution for JavaScript and TypeScript projects.
