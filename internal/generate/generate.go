@@ -61,6 +61,9 @@ func Write(output string, candidates []model.Candidate) error {
 func serverSource(candidates []model.Candidate) ([]byte, error) {
 	seen := map[string]bool{}
 	for _, candidate := range candidates {
+		if !candidate.Ready() {
+			return nil, fmt.Errorf("cannot generate %s: %s", candidate.ID, candidate.Issue)
+		}
 		if seen[candidate.ToolName] {
 			return nil, fmt.Errorf("duplicate MCP tool name %q", candidate.ToolName)
 		}

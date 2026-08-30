@@ -20,6 +20,7 @@
 
 - Static FastAPI route discovery.
 - Recursive FastAPI router and prefix resolution.
+- Visibility for routes whose parameter schemas are not ready for generation.
 - Static Express route discovery for JavaScript and TypeScript projects.
 - Support for `GET`, `POST`, `PUT`, `PATCH`, `DELETE`, `OPTIONS`, and `HEAD`.
 - Primitive path and query parameters: `str`, `int`, `float`, and `bool`.
@@ -53,7 +54,7 @@ go run ./cmd/mcp-kettel \
   --output ./generated-express-mcp
 ```
 
-The checklist starts with every route selected. Use `g` to cycle grouping by source file, HTTP method, or route prefix. Groups start collapsed; highlight a group and press `space` to expand or collapse it. Once expanded, use `space` on a route to toggle one, `a` to select all, `n` to clear all, `/` to filter, `enter` to generate, or `esc` to cancel.
+The checklist starts with every ready route selected. Routes marked with `×` were discovered but need parameter-schema support before generation. Use `g` to cycle grouping by source file, HTTP method, or route prefix. Groups start collapsed; highlight a group and press `space` to expand or collapse it. Once expanded, use `space` on a ready route to toggle one, `a` to select all ready routes, `n` to clear all, `/` to filter, `enter` to generate, or `esc` to cancel.
 
 | Group large route sets | Filter matching APIs |
 | --- | --- |

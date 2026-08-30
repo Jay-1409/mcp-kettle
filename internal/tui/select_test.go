@@ -33,3 +33,14 @@ func TestFilterValueMatchesVisibleItemLayout(t *testing.T) {
 		t.Fatalf("filter value = %q, want %q", got, want)
 	}
 }
+
+func TestSetAllLeavesUnavailableCandidatesUnselected(t *testing.T) {
+	m := selectionModel{
+		candidates: []model.Candidate{{ID: "ready"}, {ID: "blocked", Issue: "needs schema"}},
+		selected:   make(map[string]bool),
+	}
+	m.setAll(true)
+	if !m.selected["ready"] || m.selected["blocked"] {
+		t.Fatalf("unexpected selection: %#v", m.selected)
+	}
+}

@@ -32,14 +32,17 @@ def create(user: User):
 	if err != nil {
 		t.Fatal(err)
 	}
-	if len(candidates) != 2 {
-		t.Fatalf("got %d candidates, want 2", len(candidates))
+	if len(candidates) != 3 {
+		t.Fatalf("got %d candidates, want 3", len(candidates))
 	}
 	if got := candidates[0].ToolName; got != "get_users_user_id" {
 		t.Fatalf("tool name = %q", got)
 	}
 	if candidates[0].Parameters[0].Location != "path" || candidates[0].Parameters[1].Required {
 		t.Fatalf("unexpected parameters: %#v", candidates[0].Parameters)
+	}
+	if candidates[2].Ready() {
+		t.Fatal("Pydantic route should be discovered but unavailable for generation")
 	}
 }
 

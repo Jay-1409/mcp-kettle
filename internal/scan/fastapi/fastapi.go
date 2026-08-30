@@ -71,10 +71,7 @@ func scanRoutes(root, path string, source []byte) (map[string][]model.Candidate,
 			return
 		}
 		for _, route := range routePattern.FindAllStringSubmatch(text, -1) {
-			parameters, ok := parseParameters(function[2], route[3])
-			if !ok {
-				continue
-			}
+			parameters, issue := parseParameters(function[2], route[3])
 			method := strings.ToUpper(route[2])
 			line := int(node.StartPosition().Row) + 1
 			candidates[route[1]] = append(candidates[route[1]], model.Candidate{
@@ -86,6 +83,7 @@ func scanRoutes(root, path string, source []byte) (map[string][]model.Candidate,
 				SourceFile:  filepath.ToSlash(relative),
 				SourceLine:  line,
 				Parameters:  parameters,
+				Issue:       issue,
 			})
 		}
 	})
@@ -101,15 +99,21 @@ func walk(node *tree_sitter.Node, visit func(*tree_sitter.Node)) {
 	}
 }
 
-func parseParameters(raw, route string) ([]model.Parameter, bool) {
+func parseParameters(raw, route string) ([]model.Parameter, string) {
 	if strings.TrimSpace(raw) == "" {
-		return nil, true
+		return nil, ""
 	}
 	var parameters []model.Parameter
+	unsupported := false
 	for _, rawParam := range strings.Split(raw, ",") {
-		match := paramPattern.FindStringSubmatch(strings.TrimSpace(rawParam))
+		rawParam = strings.TrimSpace(rawParam)
+		if rawParam == "*" {
+			continue
+		}
+		match := paramPattern.FindStringSubmatch(rawParam)
 		if match == nil {
-			return nil, false
+			unsupported = true
+			continue
 		}
 		if match[1] == "self" || match[1] == "request" {
 			continue
@@ -119,7 +123,8 @@ func parseParameters(raw, route string) ([]model.Parameter, bool) {
 			typeName = "str"
 		}
 		if typeName != "str" && typeName != "int" && typeName != "float" && typeName != "bool" {
-			return nil, false
+			unsupported = true
+			continue
 		}
 		location := "query"
 		if strings.Contains(route, "{"+match[1]+"}") {
@@ -132,5 +137,8 @@ func parseParameters(raw, route string) ([]model.Parameter, bool) {
 			Required: match[3] == "",
 		})
 	}
-	return parameters, true
+	if unsupported {
+		return parameters, "parameter schema needs support"
+	}
+	return parameters, ""
 }

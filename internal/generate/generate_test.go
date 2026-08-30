@@ -34,3 +34,10 @@ func TestWriteGeneratesSyntacticallyValidSelectedTool(t *testing.T) {
 		t.Fatal("generated tool is missing")
 	}
 }
+
+func TestServerSourceRejectsUnavailableRoute(t *testing.T) {
+	_, err := serverSource([]model.Candidate{{ID: "POST /users", Issue: "parameter schema needs support"}})
+	if err == nil || !strings.Contains(err.Error(), "parameter schema needs support") {
+		t.Fatalf("error = %v", err)
+	}
+}

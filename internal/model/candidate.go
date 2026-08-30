@@ -21,7 +21,10 @@ type Candidate struct {
 	SourceFile  string
 	SourceLine  int
 	Parameters  []Parameter
+	Issue       string
 }
+
+func (c Candidate) Ready() bool { return c.Issue == "" }
 
 func (c Candidate) Label() string {
 	return fmt.Sprintf("%-6s %-28s %s:%d", c.Method, c.Route, c.SourceFile, c.SourceLine)

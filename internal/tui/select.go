@@ -66,12 +66,18 @@ func (i item) Title() string {
 	mark := "○"
 	if i.selected {
 		mark = "●"
+	} else if !i.candidate.Ready() {
+		mark = "×"
 	}
 	return highlightMatches(fmt.Sprintf("%s  %s", mark, i.candidate.Label()), i.filter)
 }
 
 func (i item) Description() string {
-	return highlightMatches(i.candidate.ToolName+" · "+i.candidate.Description, i.filter)
+	description := i.candidate.ToolName + " · " + i.candidate.Description
+	if !i.candidate.Ready() {
+		description += " · unavailable: " + i.candidate.Issue
+	}
+	return highlightMatches(description, i.filter)
 }
 
 func (i item) FilterValue() string {
@@ -92,7 +98,7 @@ type selectionModel struct {
 func Select(candidates []model.Candidate) ([]model.Candidate, bool, error) {
 	selected := make(map[string]bool, len(candidates))
 	for _, candidate := range candidates {
-		selected[candidate.ID] = true
+		selected[candidate.ID] = candidate.Ready()
 	}
 	m := selectionModel{candidates: candidates, selected: selected, expanded: make(map[string]bool), filter: new(string)}
 	delegate := list.NewDefaultDelegate()
@@ -138,7 +144,9 @@ func (m selectionModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 		case "space":
 			switch current := m.list.SelectedItem().(type) {
 			case item:
-				m.selected[current.candidate.ID] = !m.selected[current.candidate.ID]
+				if current.candidate.Ready() {
+					m.selected[current.candidate.ID] = !m.selected[current.candidate.ID]
+				}
 			case groupItem:
 				m.expanded[current.name] = !current.expanded
 			default:
@@ -174,8 +182,9 @@ func (m selectionModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 
 func (m selectionModel) View() tea.View {
 	count := m.selectedCount()
+	ready := m.readyCount()
 	footer := lipgloss.NewStyle().Foreground(lipgloss.Color("241")).Render(
-		fmt.Sprintf("  %d/%d selected · g group: %s · %s · a all · n none · / filter · enter generate · esc cancel", count, len(m.candidates), m.grouping, m.spaceHint()),
+		fmt.Sprintf("  %d/%d ready selected · %d unavailable · g group: %s · %s · a all · n none · / filter · enter generate · esc cancel", count, ready, len(m.candidates)-ready, m.grouping, m.spaceHint()),
 	)
 	view := tea.NewView(m.list.View() + "\n" + footer)
 	view.AltScreen = true
@@ -273,8 +282,18 @@ func (m selectionModel) groupKey(candidate model.Candidate) string {
 
 func (m selectionModel) setAll(selected bool) {
 	for _, candidate := range m.candidates {
-		m.selected[candidate.ID] = selected
+		m.selected[candidate.ID] = selected && candidate.Ready()
 	}
+}
+
+func (m selectionModel) readyCount() int {
+	count := 0
+	for _, candidate := range m.candidates {
+		if candidate.Ready() {
+			count++
+		}
+	}
+	return count
 }
 
 func (m selectionModel) selectedCount() int {

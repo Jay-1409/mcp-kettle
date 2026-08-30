@@ -13,7 +13,7 @@ The scanner uses Tree-sitter and never imports or executes the host project. The
 
 FastAPI scanning builds a graph of `FastAPI` and `APIRouter` declarations. Import and `include_router()` edges connect the nodes. Traversal starts at each FastAPI application, accumulates router and mount prefixes, and prevents recursive include cycles. Routers that cannot be reached from an application remain discoverable with their local prefix.
 
-The current scanner skips Pydantic request bodies, dependency injection, computed routes, decorator aliases, and unsupported parameter types. The output directory must not already exist.
+The FastAPI graph uses depth-first traversal to resolve nested router mounts and prefixes. Literal route decorators remain visible even when their Pydantic request bodies, dependency injection, or parameter types are not ready for generation. The TUI marks those routes unavailable. Computed routes and decorator aliases remain unsupported. The output directory must not already exist.
 
 The current workflow is synchronous and single-process. No background workers or shared service state are required. There are no architecture diagrams because the pipeline is linear and is fully described above.
 
