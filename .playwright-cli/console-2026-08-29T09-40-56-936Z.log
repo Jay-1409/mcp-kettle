@@ -14,3 +14,4 @@
 [19168241ms] [ERROR] Failed to load resource: net::ERR_NETWORK_IO_SUSPENDED @ http://127.0.0.1:4387/events/c41068a859c893d7:0
 [26973945ms] [ERROR] Failed to load resource: net::ERR_NETWORK_IO_SUSPENDED @ http://127.0.0.1:4387/events/c41068a859c893d7:0
 [28184065ms] [ERROR] Failed to load resource: net::ERR_NETWORK_IO_SUSPENDED @ http://127.0.0.1:4387/events/c41068a859c893d7:0
+[79947926ms] [ERROR] Failed to load resource: net::ERR_NETWORK_IO_SUSPENDED @ http://127.0.0.1:4387/events/c41068a859c893d7:0
