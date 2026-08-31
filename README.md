@@ -1,8 +1,8 @@
 # MCP Kettel
 
-> *Turn routes in from API's into an MCP server.*
+> *Turn routes from APIs into an MCP server.*
 
-[![License: not specified](https://img.shields.io/badge/license-not%20specified-lightgrey.svg)](./LICENSE)
+[![License: Apache-2.0](https://img.shields.io/badge/license-Apache--2.0-blue.svg)](./LICENSE)
 [![Version: 0.1.0](https://img.shields.io/badge/version-0.1.0-blue.svg)](./go.mod)
 [![Language: Go](https://img.shields.io/badge/language-Go-00ADD8.svg)](https://go.dev/)
 
@@ -10,7 +10,7 @@
 
 ## What's in it for you
 
-- Find FastAPI or Express routes without running or importing the source project.
+- Find API routes without running or importing the source project.
 - Review discovered routes before exposing anything.
 - Search, select, or clear routes from an interactive terminal checklist.
 - Generate a standalone Go MCP server with only the routes you chose.
@@ -18,22 +18,22 @@
 
 ## Features
 
-- Recursive FastAPI router and prefix resolution.
+- Static route discovery across supported backend frameworks.
+- Recursive router, mount, and prefix resolution.
 - Visibility for routes whose parameter schemas are not ready for generation.
-- Recursive Express router and mount-prefix resolution for JavaScript and TypeScript projects.
 - Support for `GET`, `POST`, `PUT`, `PATCH`, `DELETE`, `OPTIONS`, and `HEAD`.
-- Primitive path and query parameters: `str`, `int`, `float`, and `bool`.
+- Primitive string, integer, float, and boolean path and query parameters.
 - Deterministic MCP server generation.
 - Optional upstream `Authorization` header forwarding.
 - Safe cancellation and refusal to overwrite an existing output directory.
 
 ## Quick Start
 
-Install Go 1.24 or newer, then run Kettel against a FastAPI or Express project:
+Install Go 1.24 or newer, then run Kettel against a supported API project:
 
 ```sh
 go run ./cmd/mcp-kettel \
-  --input /path/to/fastapi-project \
+  --input /path/to/api-project \
   --output ./generated-mcp
 ```
 
@@ -45,21 +45,13 @@ go run ./cmd/mcp-kettel \
   --output ./generated-mcp
 ```
 
-Try the Express fixture:
-
-```sh
-go run ./cmd/mcp-kettel \
-  --input ./example/express-project \
-  --output ./generated-express-mcp
-```
-
 The checklist starts with every ready route selected. Routes marked with `×` were discovered but need parameter-schema support before generation. Use `g` to cycle grouping by source file, HTTP method, or route prefix. Groups start collapsed; highlight a group and press `space` to expand or collapse it. Once expanded, use `space` on a ready route to toggle one, `a` to select all ready routes, `n` to clear all, `/` to filter, `enter` to generate, or `esc` to cancel.
 
 | Group large route sets | Filter matching APIs |
 | --- | --- |
 | ![Routes grouped by source file](./docs/images/kettel-grouping.png) | ![Routes filtered by the word users](./docs/images/kettel-filter.png) |
 
-Run the generated server beside the running FastAPI application:
+Run the generated server beside the running source application:
 
 ```sh
 cd generated-mcp
@@ -76,7 +68,7 @@ go run .
 
 If `--output` is omitted, Kettel writes to `<input>/mcp-server`.
 
-FastAPI routes support primitive path and query parameters. Express routes support literal `app.get(...)`, `router.post(...)`, nested `.use()` mounts, relative ES module or CommonJS router imports, and path parameters such as `/users/:id`.
+Kettel initially supports FastAPI and Express. Contributions that add more backend frameworks are welcome. See [Contributing](./docs/contributing.md).
 
 ## Documentation
 
@@ -85,4 +77,4 @@ FastAPI routes support primitive path and query parameters. Express routes suppo
 
 ## License
 
-Unlicensed (no terms declared). See [LICENSE](./LICENSE).
+Apache License 2.0. See [LICENSE](./LICENSE).
